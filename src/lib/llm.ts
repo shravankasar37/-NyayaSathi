@@ -66,7 +66,10 @@ async function groqCall(model: string, opts: CallOpts, jsonSchema?: unknown): Pr
   });
   if (!res.ok) {
     const body = await res.text();
-    throw new LlmError(`groq ${model} ${res.status}: ${body.slice(0, 300)}`, res.status, retryAfter(res, body));
+    // In JSON mode Groq rejects a malformed sample with a 400 ("Failed to validate/generate JSON"). That is a bad
+    // draw, not a bad request: report it as retryable so the router samples again or fails over.
+    const badSample = res.status === 400 && /json_validate_failed|Failed to (?:validate|generate) JSON/i.test(body);
+    throw new LlmError(`groq ${model} ${res.status}: ${body.slice(0, 300)}`, badSample ? 502 : res.status, retryAfter(res, body));
   }
   const j = (await res.json()) as { choices?: { message?: { content?: string } }[]; usage?: { prompt_tokens?: number; completion_tokens?: number } };
   return { text: j.choices?.[0]?.message?.content ?? "", inputTokens: j.usage?.prompt_tokens ?? 0, outputTokens: j.usage?.completion_tokens ?? 0 };
