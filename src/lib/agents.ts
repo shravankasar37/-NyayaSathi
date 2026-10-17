@@ -18,7 +18,7 @@ export type TraceEvent =
   | { type: "result"; result: Result }
   | { type: "clarify"; questions: string[]; intake: Intake }
   | { type: "abstain"; reason: string; help: string[] }
-  | { type: "error"; message: string };
+  | { type: "error"; message: string; code?: "quota" };
 
 const ISSUE_TYPES = ["consumer_complaint", "rti_application", "rti_first_appeal", "police_complaint", "cyber_fraud", "out_of_scope"] as const;
 

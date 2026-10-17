@@ -1,19 +1,15 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Intake, Result, TraceEvent } from "@/lib/agents";
 import type { Usage } from "@/lib/llm";
+import { EXAMPLES, exampleByText } from "@/lib/examples";
+
+type ReplayInfo = { recordedAt: string; models: string[]; totalMs: number };
 
 type Step = { agent: string; status: "start" | "done"; detail?: string };
 type Phase = "idle" | "running" | "clarify" | "done" | "abstain" | "error";
 
-const EXAMPLES = [
-  { label: "Defective phone", text: "I bought a Redmi phone for ₹18,499 from a shop in Pune on 2 September 2026. The screen stopped working after 10 days. The shop and the service centre both refuse to replace or repair it and say it is physical damage, which is false. I want a replacement or refund." },
-  { label: "RTI: road repair", text: "I want to know how much money our municipal corporation in Nashik spent on repairing the road in front of my house in 2025, which contractor did it and why it broke again within 3 months." },
-  { label: "Police won't file FIR", text: "My motorcycle was stolen from outside my building in Thane last night. I went to the police station this morning but they refused to register an FIR and told me to come back after a week." },
-  { label: "UPI fraud call", text: "Today someone called pretending to be from SBI customer care, said my KYC was expiring, and asked me to share the OTP. After I shared it, ₹42,000 was debited from my account in two UPI transactions." },
-  { label: "हिंदी: ठगी", text: "एक आदमी ने मुझसे नौकरी दिलाने के नाम पर 25,000 रुपये लिए और अब फोन नहीं उठा रहा। मैं इंदौर में रहता हूं।" },
-];
 
 const AGENT_LABEL: Record<string, string> = { intake: "Intake agent", research: "Research agent", rules: "Rules engine", drafter: "Drafting agent", verifier: "Verification agent" };
 
@@ -58,17 +54,31 @@ export default function Home() {
   const [clarify, setClarify] = useState<{ questions: string[]; intake: Intake } | null>(null);
   const [abstain, setAbstain] = useState<{ reason: string; help: string[] } | null>(null);
   const [error, setError] = useState("");
+  const [errorCode, setErrorCode] = useState<string | undefined>();
+  const [recorded, setRecorded] = useState<Set<string>>(new Set());
+  const [mode, setMode] = useState<"replay" | "live">("replay");
+  const [replay, setReplay] = useState<ReplayInfo | null>(null);
   const [tab, setTab] = useState<"doc" | "rights" | "law" | "checks">("doc");
   const [openId, setOpenId] = useState<string | null>(null);
   const [startedAt, setStartedAt] = useState(0);
   const [elapsed, setElapsed] = useState(0);
   const resultRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    fetch("/api/examples").then((r) => r.json()).then((list: { id: string; recorded: boolean }[]) => setRecorded(new Set(list.filter((e) => e.recorded).map((e) => e.id)))).catch(() => {});
+  }, []);
+  const example = exampleByText(story);
+  const canReplay = !!example && recorded.has(example.id);
+
   const labels = useMemo(() => Object.fromEntries((result?.selected ?? []).map((s) => [s.id, s.label])), [result]);
   const totals = usage.reduce((a, u) => ({ calls: a.calls + 1, tokens: a.tokens + u.inputTokens + u.outputTokens }), { calls: 0, tokens: 0 });
 
-  async function run(withAnswers?: string) {
+  async function run(withAnswers?: string, forceReplayId?: string) {
+    const replayId = forceReplayId ?? (!withAnswers && canReplay && mode === "replay" ? example!.id : undefined);
+    if (forceReplayId) setStory(EXAMPLES.find((e) => e.id === forceReplayId)?.text ?? story);
     setPhase("running");
+    setReplay(null);
+    setErrorCode(undefined);
     setSteps([]);
     setUsage([]);
     setResult(null);
@@ -80,7 +90,9 @@ export default function Home() {
     setStartedAt(t0);
     if (!withAnswers) setClarify(null);
     try {
-      const res = await fetch("/api/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ story, answers: withAnswers }) });
+      const res = replayId
+        ? await fetch(`/api/replay?id=${encodeURIComponent(replayId)}`)
+        : await fetch("/api/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ story, answers: withAnswers }) });
       if (!res.ok || !res.body) {
         const j = await res.json().catch(() => ({}));
         throw new Error(j.error ?? `Request failed (${res.status})`);
@@ -97,13 +109,14 @@ export default function Home() {
         while ((idx = buf.indexOf("\n\n")) >= 0) {
           const line = buf.slice(0, idx).replace(/^data: /, "");
           buf = buf.slice(idx + 2);
-          const e = JSON.parse(line) as TraceEvent;
-          if (e.type === "step") setSteps((s) => [...s, e]);
+          const e = JSON.parse(line) as TraceEvent | ({ type: "replay" } & ReplayInfo);
+          if (e.type === "replay") setReplay({ recordedAt: e.recordedAt, models: e.models, totalMs: e.totalMs });
+          else if (e.type === "step") setSteps((s) => [...s, e]);
           else if (e.type === "usage") setUsage((u) => [...u, e.usage]);
           else if (e.type === "result") { setResult(e.result); final = "done"; }
           else if (e.type === "clarify") { setClarify({ questions: e.questions, intake: e.intake }); final = "clarify"; }
           else if (e.type === "abstain") { setAbstain({ reason: e.reason, help: e.help }); final = "abstain"; }
-          else if (e.type === "error") { setError(e.message); final = "error"; }
+          else if (e.type === "error") { setError(e.message); setErrorCode(e.code); final = "error"; }
         }
       }
       setElapsed(Date.now() - t0);
@@ -152,13 +165,31 @@ export default function Home() {
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <span className="text-xs" style={{ color: "var(--muted)" }}>Try:</span>
           {EXAMPLES.map((ex) => (
-            <button key={ex.label} onClick={() => setStory(ex.text)} className="rounded-full border px-3 py-1 text-xs hover:opacity-80" style={{ borderColor: "var(--line)" }}>{ex.label}</button>
+            <button key={ex.id} onClick={() => setStory(ex.text)} className="rounded-full border px-3 py-1 text-xs hover:opacity-80" style={{ borderColor: example?.id === ex.id ? "var(--accent)" : "var(--line)" }}
+              title={recorded.has(ex.id) ? "Has a recorded run" : undefined}>
+              {ex.label}{recorded.has(ex.id) ? " ▶" : ""}
+            </button>
           ))}
-          <button onClick={() => run()} disabled={phase === "running" || story.trim().length < 15}
-            className="ml-auto rounded-lg px-5 py-2 text-sm font-semibold text-white disabled:opacity-50" style={{ background: "var(--accent)" }}>
-            {phase === "running" ? "Working…" : "Get my document"}
-          </button>
+          <div className="ml-auto flex items-center gap-2">
+            {canReplay && (
+              <div role="radiogroup" aria-label="Run mode" className="flex rounded-lg border p-0.5 text-xs" style={{ borderColor: "var(--line)" }}>
+                {(["replay", "live"] as const).map((m) => (
+                  <button key={m} role="radio" aria-checked={mode === m} onClick={() => setMode(m)} className="rounded-md px-2.5 py-1"
+                    style={{ background: mode === m ? "var(--accent-soft)" : "transparent", color: mode === m ? "var(--accent)" : "var(--muted)", fontWeight: mode === m ? 600 : 400 }}>
+                    {m === "replay" ? "Recorded run" : "Run live"}
+                  </button>
+                ))}
+              </div>
+            )}
+            <button onClick={() => run()} disabled={phase === "running" || story.trim().length < 15}
+              className="rounded-lg px-5 py-2 text-sm font-semibold text-white disabled:opacity-50" style={{ background: "var(--accent)" }}>
+              {phase === "running" ? "Working…" : canReplay && mode === "replay" ? "Play recorded run" : "Get my document"}
+            </button>
+          </div>
         </div>
+        {canReplay && mode === "replay" && (
+          <p className="mt-2 text-xs" style={{ color: "var(--muted)" }}>Replays a real run of this example, recorded event by event from the live agents, sped up. Switch to "Run live" to run the agents now.</p>
+        )}
         <p className="mt-3 text-xs" style={{ color: "var(--muted)" }}>Covers consumer complaints, RTI, police complaints (FIR) and cyber fraud. Don't include Aadhaar, bank or card numbers.</p>
       </section>
 
@@ -166,6 +197,11 @@ export default function Home() {
         <section className="mt-6 grid gap-6 lg:grid-cols-[320px_1fr]">
           <aside className="card h-fit p-4">
             <h2 className="mb-3 text-sm font-semibold">Agent trace</h2>
+            {replay && (
+              <p className="mb-3 rounded-md px-2.5 py-1.5 text-xs" style={{ background: "var(--accent-soft)", color: "var(--accent)" }}>
+                ▶ Recorded run · {new Date(replay.recordedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })} · took {(replay.totalMs / 1000).toFixed(0)} s live on {replay.models.join(", ")}
+              </p>
+            )}
             <ol className="space-y-3">
               {steps.map((s, i) => (
                 <li key={i} className="flex gap-2.5 text-[13px]">
@@ -180,13 +216,25 @@ export default function Home() {
             </ol>
             {totals.calls > 0 && (
               <div className="mt-4 border-t pt-3 text-xs" style={{ borderColor: "var(--line)", color: "var(--muted)" }}>
-                {totals.calls} model calls · {totals.tokens.toLocaleString()} tokens{phase !== "running" && elapsed ? ` · ${(elapsed / 1000).toFixed(1)} s` : startedAt ? "" : ""}
+                {totals.calls} model calls · {totals.tokens.toLocaleString()} tokens{phase !== "running" && elapsed && !replay ? ` · ${(elapsed / 1000).toFixed(1)} s` : ""}
+                <div className="mt-1">Answered by: {[...new Set(usage.map((u) => u.model))].join(", ")}</div>
               </div>
             )}
           </aside>
 
           <div ref={resultRef} className="min-w-0">
-            {phase === "error" && <div className="card p-5" style={{ color: "var(--bad)" }}>Something went wrong: {error}</div>}
+            {phase === "error" && errorCode === "quota" && (
+              <div className="card p-5" style={{ background: "var(--warn-soft)" }}>
+                <h2 className="mb-1 font-semibold" style={{ color: "var(--warn)" }}>The free AI quota for today is used up</h2>
+                <p className="mb-3 text-sm">NyayaSathi runs on a free model tier. You can still watch a real recorded run of an example:</p>
+                <div className="flex flex-wrap gap-2">
+                  {EXAMPLES.filter((e) => recorded.has(e.id)).map((e) => (
+                    <button key={e.id} onClick={() => run(undefined, e.id)} className="rounded-full border px-3 py-1 text-xs" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}>▶ {e.label}</button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {phase === "error" && errorCode !== "quota" && <div className="card p-5" style={{ color: "var(--bad)" }}>Something went wrong: {error}</div>}
 
             {phase === "clarify" && clarify && (
               <div className="card p-5">

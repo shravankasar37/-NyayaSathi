@@ -1,60 +1,108 @@
-// Gemini access for the agents: schema-constrained JSON (validated with zod) and plain text.
-// Free-tier models are often overloaded (503) or rate limited (429), so each call walks a fallback
-// chain of models, with one short retry per model, and reports which model answered.
+// LLM access for the agents, routed across free providers with automatic failover.
+// Each call walks ROUTES in order (default: Groq models, then Gemini models); a route that is rate limited (429)
+// or overloaded (5xx) gets one short retry, then the next route answers. JSON output is validated with zod and
+// re-asked once on a mismatch. Usage reports which provider and model answered, for the trace.
 import { ApiError, GoogleGenAI } from "@google/genai";
 import { z } from "zod";
 
-export const MODELS = [...new Set([process.env.GEMINI_MODEL, "gemini-3.5-flash", "gemini-2.5-flash", "gemini-3.5-flash-lite"].filter(Boolean) as string[])];
+type Provider = "groq" | "gemini";
+type Route = { provider: Provider; model: string };
 
-let client: GoogleGenAI | null = null;
-function ai(): GoogleGenAI {
-  if (!process.env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not set (see .env.example)");
-  client ??= new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-  return client;
+function buildRoutes(): Route[] {
+  const groq: Route[] = process.env.GROQ_API_KEY
+    ? [...new Set([process.env.GROQ_MODEL, "openai/gpt-oss-120b", "llama-3.3-70b-versatile"].filter(Boolean) as string[])].map((model) => ({ provider: "groq" as const, model }))
+    : [];
+  const gemini: Route[] = process.env.GEMINI_API_KEY
+    ? [...new Set([process.env.GEMINI_MODEL, "gemini-3.5-flash", "gemini-2.5-flash", "gemini-3.5-flash-lite"].filter(Boolean) as string[])].map((model) => ({ provider: "gemini" as const, model }))
+    : [];
+  const order = (process.env.LLM_ORDER ?? "groq,gemini").split(",").map((s) => s.trim());
+  return order.flatMap((p) => (p === "groq" ? groq : p === "gemini" ? gemini : []));
 }
+const ROUTES = buildRoutes();
 
 export type Usage = { agent: string; model: string; ms: number; inputTokens: number; outputTokens: number };
-
 type CallOpts = { agent: string; system: string; prompt: string; temperature?: number; onUsage?: (u: Usage) => void };
+type Reply = { text: string; inputTokens: number; outputTokens: number };
+
+/** An HTTP failure from any provider, so failover logic does not depend on one SDK's error class. */
+export class LlmError extends Error {
+  constructor(message: string, readonly status: number) {
+    super(message);
+  }
+}
+const statusOf = (e: unknown) => (e instanceof LlmError ? e.status : e instanceof ApiError ? e.status : 0);
+const transient = (e: unknown) => statusOf(e) === 429 || statusOf(e) >= 500;
+/** Every route is out of quota or overloaded. */
+export const isQuotaError = (e: unknown) => transient(e);
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-// 429 (quota) and 5xx (overload) are worth retrying or failing over; anything else is a real error
-const transient = (e: unknown) => e instanceof ApiError && (e.status === 429 || e.status >= 500);
 
+// ---------- Groq (OpenAI-compatible chat completions) ----------
+async function groqCall(model: string, opts: CallOpts, jsonSchema?: unknown): Promise<Reply> {
+  const system = jsonSchema
+    ? `${opts.system}\n\nReply with a single JSON object that conforms to this JSON Schema, and nothing else:\n${JSON.stringify(jsonSchema)}`
+    : opts.system;
+  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${process.env.GROQ_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model,
+      temperature: opts.temperature ?? 0.2,
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: opts.prompt },
+      ],
+      ...(jsonSchema ? { response_format: { type: "json_object" } } : {}),
+      ...(model.startsWith("openai/gpt-oss") ? { reasoning_effort: "medium" } : {}),
+    }),
+  });
+  if (!res.ok) throw new LlmError(`groq ${model} ${res.status}: ${(await res.text()).slice(0, 300)}`, res.status);
+  const j = (await res.json()) as { choices?: { message?: { content?: string } }[]; usage?: { prompt_tokens?: number; completion_tokens?: number } };
+  return { text: j.choices?.[0]?.message?.content ?? "", inputTokens: j.usage?.prompt_tokens ?? 0, outputTokens: j.usage?.completion_tokens ?? 0 };
+}
+
+// ---------- Gemini ----------
+let gemini: GoogleGenAI | null = null;
+async function geminiCall(model: string, opts: CallOpts, jsonSchema?: unknown): Promise<Reply> {
+  gemini ??= new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+  const res = await gemini.models.generateContent({
+    model,
+    contents: opts.prompt,
+    config: {
+      systemInstruction: opts.system,
+      temperature: opts.temperature ?? 0.2,
+      ...(jsonSchema ? { responseMimeType: "application/json", responseJsonSchema: jsonSchema } : {}),
+    },
+  });
+  return { text: res.text ?? "", inputTokens: res.usageMetadata?.promptTokenCount ?? 0, outputTokens: res.usageMetadata?.candidatesTokenCount ?? 0 };
+}
+
+// ---------- routing ----------
 async function call(opts: CallOpts, jsonSchema?: unknown): Promise<string> {
+  if (!ROUTES.length) throw new Error("No LLM provider configured: set GROQ_API_KEY and/or GEMINI_API_KEY (see .env.example)");
   const t0 = Date.now();
   let last: unknown;
-  for (const model of MODELS) {
+  for (const route of ROUTES) {
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
-        const res = await ai().models.generateContent({
-          model,
-          contents: opts.prompt,
-          config: {
-            systemInstruction: opts.system,
-            temperature: opts.temperature ?? 0.2,
-            ...(jsonSchema ? { responseMimeType: "application/json", responseJsonSchema: jsonSchema } : {}),
-          },
-        });
-        opts.onUsage?.({
-          agent: opts.agent,
-          model,
-          ms: Date.now() - t0,
-          inputTokens: res.usageMetadata?.promptTokenCount ?? 0,
-          outputTokens: res.usageMetadata?.candidatesTokenCount ?? 0,
-        });
-        const text = res.text;
-        if (!text) throw new Error(`${opts.agent}: empty response (finish reason ${res.candidates?.[0]?.finishReason ?? "unknown"})`);
-        return text;
+        const r = route.provider === "groq" ? await groqCall(route.model, opts, jsonSchema) : await geminiCall(route.model, opts, jsonSchema);
+        if (!r.text) throw new LlmError(`${opts.agent}: empty response from ${route.provider}/${route.model}`, 502);
+        opts.onUsage?.({ agent: opts.agent, model: `${route.provider}/${route.model}`, ms: Date.now() - t0, inputTokens: r.inputTokens, outputTokens: r.outputTokens });
+        return r.text;
       } catch (e) {
         if (!transient(e)) throw e;
         last = e;
-        if (attempt === 0) await sleep(1_500);
+        // a 429 means this route's quota is spent: move on rather than wait
+        if (attempt === 0 && statusOf(e) !== 429) await sleep(1_500);
+        else break;
       }
     }
   }
   throw last;
 }
+
+/** Strips a ```json fence some models add despite JSON mode. */
+const unfence = (s: string) => s.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
 
 /** Calls the model with a JSON schema derived from `schema`; validates the result, re-asking once on a mismatch. */
 export async function generateJson<T>(schema: z.ZodType<T>, opts: CallOpts): Promise<T> {
@@ -64,7 +112,7 @@ export async function generateJson<T>(schema: z.ZodType<T>, opts: CallOpts): Pro
     const raw = await call({ ...opts, prompt }, jsonSchema);
     let parsed: unknown;
     try {
-      parsed = JSON.parse(raw);
+      parsed = JSON.parse(unfence(raw));
     } catch {
       parsed = undefined;
     }
@@ -79,3 +127,5 @@ export async function generateJson<T>(schema: z.ZodType<T>, opts: CallOpts): Pro
 }
 
 export const generateText = (opts: CallOpts) => call(opts);
+
+export const configuredRoutes = () => ROUTES.map((r) => `${r.provider}/${r.model}`);
