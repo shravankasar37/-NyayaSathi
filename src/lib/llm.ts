@@ -97,8 +97,8 @@ async function call(opts: CallOpts, jsonSchema?: unknown): Promise<string> {
   const t0 = Date.now();
   let last: unknown;
   // Free tiers meter tokens per minute: when every route is spent, wait for the soonest reset and go round
-  // again (at most 3 rounds, never waiting more than 30 s at a time), instead of failing the user.
-  for (let round = 0; round < 3; round++) {
+  // again (at most 4 rounds, never waiting more than 30 s at a time), instead of failing the user.
+  for (let round = 0; round < 4; round++) {
     let soonest = Infinity;
     for (const route of ROUTES) {
       for (let attempt = 0; attempt < 2; attempt++) {

@@ -80,7 +80,8 @@ const SelectSchema = z.object({
   enough: z.boolean().describe("the selected sections cover the offence/right AND the procedure to use it"),
   followUpQuery: z.string().nullable().describe("if not enough: one more search query for what is missing"),
 });
-export type Selected = { section: Section; why: string };
+// passage: the retrieved chunk that matched (what the drafter and verifier read; keeps prompts small for free tiers)
+export type Selected = { section: Section; why: string; passage: string };
 
 const ACT_GUIDE = `Corpus: BNS = Bharatiya Nyaya Sanhita 2023 (offences, replaced IPC); BNSS = Bharatiya Nagarik Suraksha Sanhita 2023 (police and court procedure, FIR, bail; replaced CrPC);
 CPA = Consumer Protection Act 2019; RTI = Right to Information Act 2005; IT = Information Technology Act 2000 (cyber offences).`;
@@ -125,7 +126,8 @@ export async function researchAgent(intake: Intake, emit: (e: TraceEvent) => voi
       onUsage,
     });
     const known = new Set(candidates.map((c) => c.section.id));
-    picked = sel.selected.filter((s) => known.has(s.id)).map((s) => ({ section: getSection(s.id)!, why: s.why }));
+    const chunkOf = new Map(candidates.map((c) => [c.section.id, c.chunkText]));
+    picked = sel.selected.filter((s) => known.has(s.id)).map((s) => ({ section: getSection(s.id)!, why: s.why, passage: chunkOf.get(s.id)! }));
     if (sel.enough || !sel.followUpQuery || round === 1) break;
     queries.push(sel.followUpQuery);
     emit({ type: "step", agent: "research", status: "start", detail: `Coverage thin, searching again: "${sel.followUpQuery}"` });
@@ -150,7 +152,7 @@ const LANG = { en: "English", hi: "Hindi", mr: "Marathi" } as const;
 
 export async function drafterAgent(intake: Intake, selected: Selected[], rules: RuleResult[], onUsage: (u: Usage) => void, feedback?: string): Promise<Draft> {
   const issue = intake.issueType as IssueType;
-  const law = selected.map((s) => `[[${s.section.id}]] ${citeLabel(s.section.id)}: ${s.why}\n${s.section.text.slice(0, 1200)}`).join("\n\n");
+  const law = selected.map((s) => `[[${s.section.id}]] ${citeLabel(s.section.id)}: ${s.why}\n${s.passage.slice(0, 1000)}`).join("\n\n");
   const ruleText = rules.map((r) => `- ${r.label}: ${r.value}`).join("\n");
   return generateJson(DraftSchema, {
     agent: "drafter",
@@ -248,7 +250,8 @@ export async function verifierAgent(story: string, draft: Draft, selected: Selec
   const valid = cited.filter((id) => allowed.has(id));
   const citationCheck = async (): Promise<Check[]> => {
     if (!valid.length) return [];
-    const law = valid.map((id) => `[[${id}]] ${citeLabel(id)}\n${getSection(id)!.text.slice(0, 2500)}`).join("\n\n");
+    const passage = new Map(selected.map((s) => [s.section.id, s.passage]));
+    const law = valid.map((id) => `[[${id}]] ${citeLabel(id)}\n${(passage.get(id) ?? getSection(id)!.text).slice(0, 1500)}`).join("\n\n");
     const r = await generateJson(SupportSchema, {
       agent: "verifier.citations",
       system: `You verify legal citations. For every [[ID]] marker in the DRAFT, find the sentence that cites it and decide whether the cited section's TEXT actually supports that sentence. Be strict: supported only if the section text says it. One entry per marker.`,
@@ -314,7 +317,7 @@ export async function runPipeline(story: string, emit: (e: TraceEvent) => void, 
     for (const b of r.basis) {
       if (b.section && !have.has(b.section)) {
         have.add(b.section);
-        selected.push({ section: getSection(b.section)!, why: `Procedure: ${r.label.toLowerCase()} - ${r.value}` });
+        selected.push({ section: getSection(b.section)!, why: `Procedure: ${r.label.toLowerCase()} - ${r.value}`, passage: getSection(b.section)!.text });
       }
     }
   }
