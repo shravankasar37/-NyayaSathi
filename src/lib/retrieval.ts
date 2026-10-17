@@ -1,9 +1,9 @@
-// Hybrid retrieval over the legal corpus: BM25 keyword search + dense vectors (multilingual-e5),
+// Hybrid retrieval over the legal corpus: BM25 keyword search + dense vectors (see embed.ts),
 // fused with Reciprocal Rank Fusion and aggregated from chunks to sections.
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { CHUNKS, getSection, type Section } from "./corpus";
-import { embedQuery, EMBED_DIM } from "./embed";
+import { embedQuery, EMBED_DIM, INDEX_FILE } from "./embed";
 
 // ---------- BM25 ----------
 const STOP = new Set(
@@ -45,10 +45,10 @@ function bm25(query: string): number[] {
 let vectors: Float32Array | null = null;
 function loadVectors(): Float32Array {
   if (vectors) return vectors;
-  const buf = readFileSync(path.join(process.cwd(), "corpus", "embeddings.bin"));
+  const buf = readFileSync(path.join(process.cwd(), "corpus", INDEX_FILE));
   vectors = new Float32Array(buf.buffer, buf.byteOffset, buf.byteLength / 4);
   if (vectors.length !== CHUNKS.length * EMBED_DIM) {
-    throw new Error("corpus/embeddings.bin does not match the corpus; run `npm run embed`");
+    throw new Error(`corpus/${INDEX_FILE} does not match the corpus; run "npm run embed"`);
   }
   return vectors;
 }
@@ -80,7 +80,15 @@ export async function search(query: string, opts: { k?: number; acts?: string[];
   const { k = 8, acts, mode = "hybrid" } = opts;
   const lists: Map<number, number>[] = [];
   if (mode !== "dense") lists.push(rankOf(bm25(query)));
-  if (mode !== "bm25") lists.push(rankOf(await dense(query)));
+  if (mode !== "bm25") {
+    try {
+      lists.push(rankOf(await dense(query)));
+    } catch (e) {
+      // embedding service down or out of quota: keep answering from keywords alone
+      if (mode === "dense") throw e;
+      console.warn(`dense retrieval unavailable, using BM25 only: ${e instanceof Error ? e.message.slice(0, 120) : e}`);
+    }
+  }
 
   const chunkScore = new Map<number, number>();
   for (const ranks of lists) for (const [i, r] of ranks) chunkScore.set(i, (chunkScore.get(i) ?? 0) + 1 / (RRF_K + r));

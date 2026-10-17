@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: nyayasathi
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      # entered in the Render dashboard, never committed; calls try Groq first, then Gemini
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false

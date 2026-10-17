@@ -1,0 +1,417 @@
+{
+ "exampleId": "rti-road",
+ "story": "I want to know how much money our municipal corporation in Nashik spent on repairing the road in front of my house in 2025, which contractor did it and why it broke again within 3 months.",
+ "recordedAt": "2026-10-17T16:13:13.499Z",
+ "models": [
+  "gemini-3.5-flash-lite"
+ ],
+ "totalMs": 57960,
+ "events": [
+  {
+   "t": 0,
+   "event": {
+    "type": "step",
+    "agent": "intake",
+    "status": "start",
+    "detail": "Understanding your problem"
+   }
+  },
+  {
+   "t": 6981,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "intake",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 6980,
+     "inputTokens": 328,
+     "outputTokens": 127
+    }
+   }
+  },
+  {
+   "t": 6982,
+   "event": {
+    "type": "step",
+    "agent": "intake",
+    "status": "done",
+    "detail": "rti application · The user wants to obtain information from the municipal corporation in Nashik regarding road repair expenses, contractor details, and reasons for damage in 2025. They are filing an RTI application to seek these details."
+   }
+  },
+  {
+   "t": 12881,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "research.rewrite",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 5899,
+     "inputTokens": 268,
+     "outputTokens": 50
+    }
+   }
+  },
+  {
+   "t": 12881,
+   "event": {
+    "type": "step",
+    "agent": "research",
+    "status": "start",
+    "detail": "Searching: \"right to information\", \"obligation of public authorities\", \"disposal of request\""
+   }
+  },
+  {
+   "t": 19451,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "research.select",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 6532,
+     "inputTokens": 2304,
+     "outputTokens": 116
+    }
+   }
+  },
+  {
+   "t": 19452,
+   "event": {
+    "type": "step",
+    "agent": "research",
+    "status": "done",
+    "detail": "Applicable: Section 3, Right to Information Act, 2005; Section 7, Right to Information Act, 2005"
+   }
+  },
+  {
+   "t": 19452,
+   "event": {
+    "type": "step",
+    "agent": "rules",
+    "status": "done",
+    "detail": "How to apply · Fee · Reply due · First appeal · Second appeal"
+   }
+  },
+  {
+   "t": 19452,
+   "event": {
+    "type": "step",
+    "agent": "drafter",
+    "status": "start",
+    "detail": "Drafting: Application for information under the Right to Information Act, 2005"
+   }
+  },
+  {
+   "t": 33219,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "drafter",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 13767,
+     "inputTokens": 1553,
+     "outputTokens": 704
+    }
+   }
+  },
+  {
+   "t": 33219,
+   "event": {
+    "type": "step",
+    "agent": "drafter",
+    "status": "done"
+   }
+  },
+  {
+   "t": 33219,
+   "event": {
+    "type": "step",
+    "agent": "verifier",
+    "status": "start",
+    "detail": "Checking every citation against the statute text and every fact against your story"
+   }
+  },
+  {
+   "t": 41233,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "verifier.facts",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 8013,
+     "inputTokens": 584,
+     "outputTokens": 358
+    }
+   }
+  },
+  {
+   "t": 41616,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "verifier.citations",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 8396,
+     "inputTokens": 1547,
+     "outputTokens": 416
+    }
+   }
+  },
+  {
+   "t": 41617,
+   "event": {
+    "type": "step",
+    "agent": "verifier",
+    "status": "done",
+    "detail": "Found 3 problem(s); sending the draft back"
+   }
+  },
+  {
+   "t": 41617,
+   "event": {
+    "type": "step",
+    "agent": "drafter",
+    "status": "start",
+    "detail": "Revising the draft"
+   }
+  },
+  {
+   "t": 50772,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "drafter",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 9155,
+     "inputTokens": 1739,
+     "outputTokens": 576
+    }
+   }
+  },
+  {
+   "t": 56925,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "verifier.facts",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 6153,
+     "inputTokens": 501,
+     "outputTokens": 309
+    }
+   }
+  },
+  {
+   "t": 57960,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "verifier.citations",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 7188,
+     "inputTokens": 2026,
+     "outputTokens": 527
+    }
+   }
+  },
+  {
+   "t": 57960,
+   "event": {
+    "type": "step",
+    "agent": "verifier",
+    "status": "done",
+    "detail": "6/6 citations supported; 2 unsupported fact(s); needs your review"
+   }
+  },
+  {
+   "t": 57960,
+   "event": {
+    "type": "result",
+    "result": {
+     "intake": {
+      "language": "en",
+      "issueType": "rti_application",
+      "summary": "The user wants to obtain information from the municipal corporation in Nashik regarding road repair expenses, contractor details, and reasons for damage in 2025. They are filing an RTI application to seek these details.",
+      "facts": {
+       "incidentDate": null,
+       "amount": null,
+       "oppositeParty": "Municipal Corporation, Nashik",
+       "place": "Nashik, Maharashtra",
+       "applicationDate": null,
+       "lifeOrLiberty": false,
+       "reliefWanted": "information"
+      },
+      "missingCritical": [],
+      "urgentDanger": false
+     },
+     "queries": [
+      "right to information",
+      "obligation of public authorities",
+      "disposal of request"
+     ],
+     "selected": [
+      {
+       "id": "RTI-3",
+       "label": "Section 3, Right to Information Act, 2005",
+       "title": "Right to information",
+       "why": "It establishes the core right of citizens to obtain information, which forms the basis of the user's application.",
+       "text": "3. Right to information.-Subject to the provisions of this Act, all\ncitizens shall have the right to information.\n@\n4.\n\n%\nObligations of public authorities.\n!",
+       "source": "https://prsindia.org/files/bills_acts/acts_parliament/2005/the-right-to-information-act-2005.pdf"
+      },
+      {
+       "id": "RTI-7",
+       "label": "Section 7, Right to Information Act, 2005",
+       "title": "Disposal of request",
+       "why": "It outlines the procedure and timeline for the Public Information Officer to dispose of the request and provide the information.",
+       "text": "7. Disposal of request.-(1) Subject to the proviso to sub-section (2)\nof section 5 or the proviso to sub-section (3) of section 6, the\nCentral Public Information Officer or State Public Information Officer,\nas the case may be, on receipt of a request under section 6 shall, as\nexpeditiously as possible, and in any case within thirty days of the\nreceipt of the request, either provide the information on payment of\nsuch fee as may be prescribed or reject the request for any of the\nreasons specified in sections 8 and 9:\nProvided that where the information sought for concerns the life or\nliberty of a person, the same shall be provided within forty-eight\nhours of the receipt of the request.\n\n(2) If the Central Public Information Officer or State Public\nInformation Officer, as the case may be, fails to give decision on the\nrequest for information within the period specified under sub-section\n(1), the Central Public Information Officer or State Public\nInformation Officer, as the case may be, shall be deemed to have\nrefused the request.\n(3) Where a decision is taken to provide the information on payment of\nany further fee representing the cost of providing the information, the\nCentral Public Information Officer or State Public Information Officer,\nas the case may be, shall send an intimation to the person making the\nrequest, giving-\n(a) the details of further fees representing the cost of providing the\ninformation as determined by him, together with the calculations made\nto arrive at the amount in accordance with fee prescribed under sub-\nsection (1), requesting him to deposit that fees, and the period\nintervening between the despatch of the said intimation and payment\nof fees shall be excluded for the purpose of calculating the period of\nthirty days referred to in that sub-section;\n(b) information concerning his or her right with respect to review the\ndecision as to the amount of fees charged or the form of access\nprovided, including the particulars of the appellate authority, time\nlimit, process and any other forms.\n(4) Where access to the record or a part thereof is required to be\nprovided under this Act and the person to whom access is to be provided\nis sensorily disabled, the Central Public Information Officer or State\nPublic Information Officer, as the case may be, shall provide\nassistance to enable access to the information, including providing\nsuch assistance as may be appropriate for the inspection.\n(5) Where access to information is to be provided in the printed or\nin any electronic format, the applicant shall, subject to the\nprovisions of sub-section (6), pay such fee as may be prescribed:\nProvided that the fee prescribed under sub-section (1) of section 6 and\nsub-sections (1) and (5) of section 7 shall be reasonable and no such\nfee shall be charged from the persons who are of below poverty line as\nmay be determined by the appropriate Government.\n(6) Notwithstanding anything contained in sub-section (5), the person\nmaking request for the information shall be provided the information\nfree of charge where a public authority fails to comply with the time\nlimits specified in sub-section (1).\n(7) Before taking any decision under sub-section (1), the Central\nPublic Information Officer or State Public Information Officer, as the\ncase may be, shall take into consideration the representation made by a\nthird party under section 11.\n(8) Where a request has been rejected under sub-section (1), the\nCentral Public Information Officer or State Public Information Officer,\nas the case may be, shall communicate to the person making the\nrequest,-\n\n(i) the reasons for such rejection;\n(ii) the period within which an appeal against such rejection may\nbe preferred; and\n(iii) the particulars of the appellate authority.\n(9) An information shall ordinarily be provided in the form in which it\nis sought unless it would disproportionately divert the resources of\nthe public authority or would be detrimental to the safety or\npreservation of the record in question.\n@\n8.\n%\nExemption from disclosure of information.\n!",
+       "source": "https://prsindia.org/files/bills_acts/acts_parliament/2005/the-right-to-information-act-2005.pdf"
+      },
+      {
+       "id": "RTI-6",
+       "label": "Section 6, Right to Information Act, 2005",
+       "title": "Request for obtaining information",
+       "why": "Procedure: how to apply - Send a written or electronic application to the Public Information Officer of the office that holds the information. You do not have to give any reason for asking.",
+       "text": "6. Request for obtaining information.-(1) A person, who desires to\nobtain any information under this Act, shall make a request in writing\nor through electronic means in English or Hindi or in the official\nlanguage of the area in which the application is being made,\naccompanying such fee as may be prescribed, to-\n\n(a) the Central Public Information Officer or State Public Information\nOfficer, as the case may be, of the concerned public authority;\n(b) the Central Assistant Public Information Officer or State\nAssistant Public\nInformation Officer, as the case may be,\nspecifying the particulars of the information sought by him or her:\nProvided that where such request cannot be made in writing, the Central\nPublic Information Officer or State Public Information Officer, as the\ncase may be, shall render all reasonable assistance to the person\nmaking the request orally to reduce the same in writing.\n(2) An applicant making request for information shall not be required\nto give any reason for requesting the information or any other\npersonal details except those that may be necessary for contacting\nhim.\n(3) Where an application is made to a public authority requesting for\nan information,-\n(i) which is held by another public authority; or\n(ii) the subject matter of which is more closely connected with the\nfunctions of another public authority,\nthe public authority, to which such application is made, shall\ntransfer the application or such part of it as may be appropriate to\nthat other public authority and inform the applicant immediately\nabout such transfer:\nProvided that the transfer of an application pursuant to this sub-\nsection shall be made as soon as practicable but in no case later\nthan five days from the date of receipt of the application.\n@\n7.\n%\nDisposal of request.\n!",
+       "source": "https://prsindia.org/files/bills_acts/acts_parliament/2005/the-right-to-information-act-2005.pdf"
+      },
+      {
+       "id": "RTI-19",
+       "label": "Section 19, Right to Information Act, 2005",
+       "title": "Appeal",
+       "why": "Procedure: first appeal - To the First Appellate Authority (an officer senior to the PIO) within 30 days of the reply, or of the date the reply was due.",
+       "text": "19. Appeal.-(1) Any person who, does not receive a decision within the\ntime specified in sub-section (1) or clause (a) of sub-section (3) of\nsection 7, or is aggrieved by a decision of the Central Public\nInformation Officer or State Public Information Officer, as the case\nmay be, may within thirty days from the expiry of such period or from\nthe receipt of such a decision prefer an appeal to such officer who is\nsenior in rank to the Central Public Information Officer or State\nPublic Information Officer as the case may be, in each public\nauthority:\nProvided that such officer may admit the appeal after the expiry of the\nperiod of thirty days if he or she is satisfied that the appellant was\nprevented by sufficient cause from filing the appeal in time.\n(2) Where an appeal is preferred against an order made by a Central\nPublic Information Officer or a State Public Information Officer, as\nthe case may be, under section 11 to disclose third party information,\nthe appeal by the concerned third party shall be made within thirty\ndays from the date of the order.\n(3) A second appeal against the decision under sub-section (1) shall\nlie within ninety days from the date on which the decision should have\nbeen made or was actually received, with the Central Information\nCommission or the State Information Commission:\nProvided that the Central Information Commission or the State\nInformation Commission, as the case may be, may admit the appeal after\nthe expiry of the period of ninety days if it is satisfied that the\nappellant was prevented by sufficient cause from filing the appeal in\ntime.\n(4) If the decision of the Central Public Information Officer or State\nPublic Information Officer, as the case may be, against which an appeal\nis preferred relates to information of a third party, the Central\nInformation Commission or State Information Commission, as the case may\nbe, shall give a reasonable opportunity of being heard to that third\nparty.\n(5) In any appeal proceedings, the onus to prove that a denial of a\nrequest was justified shall be on the Central Public Information\nOfficer or State Public Information Officer, as the case may be, who\ndenied the request.\n\n(6) An appeal under sub-section (1) or sub-section (2) shall be\ndisposed of within thirty days of the receipt of the appeal or within\nsuch extended period not exceeding a total of forty-five days from the\ndate of filing thereof, as the case may be, for reasons to be recorded\nin writing.\n(7) The decision of the Central Information Commission or State\nInformation Commission, as the case may be, shall be binding.\n(8) In its decision, the Central Information Commission or State\nInformation Commission, as the case may be, has the power to-\n(a) require the public authority to take any such steps as may be\nnecessary to secure compliance with the provisions of this Act,\nincluding-\n(i) by providing access to information, if so requested, in a\nparticular form;\n(ii) by appointing a Central Public Information Officer or State Public\nInformation Officer, as the case may be;\n(iii) by publishing certain information or categories of information;\n(iv) by making necessary changes to its practices in relation to the\nmaintenance, management and destruction of records;\n(v) by enhancing the provision of training on the right to information\nfor its officials;\n(vi) by providing it with an annual report in compliance with clause\n(b) of sub-section (1) of section 4;\n(b) require the public authority to compensate the complainant for any\nloss or other detriment suffered;\n(c) impose any of the penalties provided under this Act;\n(d) reject the application.\n(9) The Central Information Commission or State Information Commission,\nas the case may be, shall give notice of its decision, including any\nright of appeal, to the complainant and the public authority.\n(10) The Central Information Commission or State Information\nCommission, as the case may be, shall decide the appeal in accordance\nwith such procedure as may be prescribed.\n@\n20.\n%\nPenalties.\n!",
+       "source": "https://prsindia.org/files/bills_acts/acts_parliament/2005/the-right-to-information-act-2005.pdf"
+      }
+     ],
+     "rules": [
+      {
+       "key": "apply",
+       "label": "How to apply",
+       "value": "Send a written or electronic application to the Public Information Officer of the office that holds the information. You do not have to give any reason for asking.",
+       "basis": [
+        {
+         "section": "RTI-6"
+        }
+       ]
+      },
+      {
+       "key": "fee",
+       "label": "Fee",
+       "value": "₹10 for central public authorities (State governments set their own fee). No fee for applicants below the poverty line, with proof.",
+       "basis": [
+        {
+         "section": "RTI-7"
+        },
+        {
+         "instrument": "Right to Information Rules, 2012"
+        }
+       ]
+      },
+      {
+       "key": "reply",
+       "label": "Reply due",
+       "value": "Within 30 days of receipt by the Public Information Officer. No reply in time counts as a refusal.",
+       "basis": [
+        {
+         "section": "RTI-7"
+        }
+       ]
+      },
+      {
+       "key": "first_appeal",
+       "label": "First appeal",
+       "value": "To the First Appellate Authority (an officer senior to the PIO) within 30 days of the reply, or of the date the reply was due.",
+       "basis": [
+        {
+         "section": "RTI-19"
+        }
+       ]
+      },
+      {
+       "key": "second_appeal",
+       "label": "Second appeal",
+       "value": "To the Central or State Information Commission within 90 days of the first appeal decision.",
+       "basis": [
+        {
+         "section": "RTI-19"
+        }
+       ]
+      }
+     ],
+     "draft": {
+      "documentTitle": "Application for Information Under the Right to Information Act, 2005",
+      "addressedTo": "The Public Information Officer, Municipal Corporation, Nashik, Maharashtra",
+      "body": "To, The Public Information Officer, Municipal Corporation, Nashik, Maharashtra. Subject: Application for information regarding road repair expenses, contractor details, and reasons for road damage in the year 2025 under [[RTI-3]] and [[RTI-6]]. Respected Sir/Madam, 1. I, [Your full name], am a citizen of India. 2. I am filing this application to seek information regarding public works undertaken within the jurisdiction of the Municipal Corporation, Nashik, for the year 2025. 3. Legal Grounds: As a citizen of India, I possess the statutory right to seek information from public authorities under [[RTI-3]]. The procedure for submitting this request is duly laid down under [[RTI-6]], and the statutory duty of the Public Information Officer to provide the information within the prescribed timeline is set out under [[RTI-7]]. If aggrieved by the response or lack thereof, remedies including the first appeal are available under [[RTI-19]]. 4. Information Sought: Kindly provide the following particulars: (a) Total expenses incurred by the Municipal Corporation, Nashik, towards road repairs during the year 2025. (b) Details of the contractor assigned for the road repair work. (c) Reasons for damage to the roads leading to the need for repairs in 2025. 5. Details of application fee: [Enclosed Indian Postal Order / Demand Draft / Court Fee Stamp of Rs. [Amount] bearing number [Number] / BPL Certificate if applicable]. Place: Nashik, Maharashtra. Date: [Date]. Signature: [Your Signature]. Name: [Your full name]. Address: [Your complete address]. Contact Number: [Your phone number]. Email: [Your email address].",
+      "placeholders": [
+       "Your full name",
+       "Amount",
+       "Number",
+       "Date",
+       "Your Signature",
+       "Your complete address",
+       "Your phone number",
+       "Your email address"
+      ],
+      "plainSummary": "This document is an RTI application filed under the Right to Information Act, 2005, addressed to the Public Information Officer of the Municipal Corporation, Nashik. It requests specific details regarding road repair expenses, the contractor involved, and reasons for road damage in 2025. You need to attach the required fee, sign it, and submit it to the municipal office, which must reply within 30 days."
+     },
+     "verification": {
+      "ok": false,
+      "codeIssues": [],
+      "checks": [
+       {
+        "id": "RTI-3",
+        "claim": "Subject: Application for information regarding road repair expenses, contractor details, and reasons for road damage in the year 2025 under [[RTI-3]] and [[RTI-6]].",
+        "supported": true,
+        "note": "Section 3 establishes the general right of citizens to information."
+       },
+       {
+        "id": "RTI-6",
+        "claim": "Subject: Application for information regarding road repair expenses, contractor details, and reasons for road damage in the year 2025 under [[RTI-3]] and [[RTI-6]].",
+        "supported": true,
+        "note": "Section 6 prescribes the procedure for making a request for information."
+       },
+       {
+        "id": "RTI-3",
+        "claim": "Legal Grounds: As a citizen of India, I possess the statutory right to seek information from public authorities under [[RTI-3]].",
+        "supported": true,
+        "note": "Section 3 explicitly grants citizens the right to information."
+       },
+       {
+        "id": "RTI-6",
+        "claim": "The procedure for submitting this request is duly laid down under [[RTI-6]], and the statutory duty of the Public Information Officer to provide the information within the prescribed timeline is set out under [[RTI-7]].",
+        "supported": true,
+        "note": "Section 6 outlines how to request information."
+       },
+       {
+        "id": "RTI-7",
+        "claim": "The procedure for submitting this request is duly laid down under [[RTI-6]], and the statutory duty of the Public Information Officer to provide the information within the prescribed timeline is set out under [[RTI-7]].",
+        "supported": true,
+        "note": "Section 7 details the disposal of requests and timelines."
+       },
+       {
+        "id": "RTI-19",
+        "claim": "If aggrieved by the response or lack thereof, remedies including the first appeal are available under [[RTI-19]].",
+        "supported": true,
+        "note": "Section 19 provides for appeals against decisions or lack thereof by the PIO."
+       }
+      ],
+      "factIssues": [
+       {
+        "statement": "2. I am filing this application to seek information regarding public works undertaken within the jurisdiction of the Municipal Corporation, Nashik, for the year 2025.",
+        "problem": "The story specifies road repairs in front of the user's house, not general public works within the jurisdiction."
+       },
+       {
+        "statement": "4. Information Sought: Kindly provide the following particulars: (a) Total expenses incurred by the Municipal Corporation, Nashik, towards road repairs during the year 2025. (b) Details of the contractor assigned for the road repair work. (c) Reasons for damage to the roads leading to the need for repairs in 2025.",
+        "problem": "The draft asks for all road repairs and road damage in Nashik for 2025, whereas the story asks specifically about the road in front of the user's house and why it broke again within 3 months."
+       }
+      ]
+     },
+     "revised": true,
+     "disclaimer": "NyayaSathi gives legal information and drafts, not legal advice. Check the document, fill every [placeholder], and consult a lawyer or your District Legal Services Authority for anything serious.",
+     "help": [
+      "Free legal aid: call the NALSA helpline 15100 or visit your District Legal Services Authority (Legal Services Authorities Act, 1987)."
+     ]
+    }
+   }
+  }
+ ]
+}

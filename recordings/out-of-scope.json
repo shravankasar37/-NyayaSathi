@@ -1,0 +1,52 @@
+{
+ "exampleId": "out-of-scope",
+ "story": "My brother and I are fighting over how to divide our late father's house in Kolhapur.",
+ "recordedAt": "2026-10-17T16:16:55.157Z",
+ "models": [
+  "gemini-3.5-flash-lite"
+ ],
+ "totalMs": 8594,
+ "events": [
+  {
+   "t": 0,
+   "event": {
+    "type": "step",
+    "agent": "intake",
+    "status": "start",
+    "detail": "Understanding your problem"
+   }
+  },
+  {
+   "t": 8594,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "intake",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 8594,
+     "inputTokens": 305,
+     "outputTokens": 152
+    }
+   }
+  },
+  {
+   "t": 8594,
+   "event": {
+    "type": "step",
+    "agent": "intake",
+    "status": "done",
+    "detail": "out of scope · The user is involved in a property dispute with their brother regarding the division of their late father's house. This matter falls outside the scope of consumer, RTI, criminal, or cyber complaints."
+   }
+  },
+  {
+   "t": 8594,
+   "event": {
+    "type": "abstain",
+    "reason": "This looks like a matter NyayaSathi does not cover yet (it handles consumer complaints, RTI, police complaints and cyber fraud). Guessing here could hurt you.",
+    "help": [
+     "Free legal aid: call the NALSA helpline 15100 or visit your District Legal Services Authority (Legal Services Authorities Act, 1987)."
+    ]
+   }
+  }
+ ]
+}

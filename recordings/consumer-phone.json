@@ -1,0 +1,420 @@
+{
+ "exampleId": "consumer-phone",
+ "story": "I bought a Redmi phone for ₹18,499 from a shop in Pune on 2 September 2026. The screen stopped working after 10 days. The shop and the service centre both refuse to replace or repair it and say it is physical damage, which is false. I want a replacement or refund.",
+ "recordedAt": "2026-10-17T16:12:15.537Z",
+ "models": [
+  "gemini-3.5-flash-lite"
+ ],
+ "totalMs": 59954,
+ "events": [
+  {
+   "t": 0,
+   "event": {
+    "type": "step",
+    "agent": "intake",
+    "status": "start",
+    "detail": "Understanding your problem"
+   }
+  },
+  {
+   "t": 7419,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "intake",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 7415,
+     "inputTokens": 353,
+     "outputTokens": 154
+    }
+   }
+  },
+  {
+   "t": 7423,
+   "event": {
+    "type": "step",
+    "agent": "intake",
+    "status": "done",
+    "detail": "consumer complaint · The user purchased a Redmi phone for Rs 18,499 from a shop in Pune, which developed a screen issue within 10 days. The seller and service center have refused to repair or replace it under a false claim of physical damage."
+   }
+  },
+  {
+   "t": 14083,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "research.rewrite",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 6660,
+     "inputTokens": 292,
+     "outputTokens": 51
+    }
+   }
+  },
+  {
+   "t": 14084,
+   "event": {
+    "type": "step",
+    "agent": "research",
+    "status": "start",
+    "detail": "Searching: \"deficiency in service\", \"unfair trade practice\", \"complaint to District Commission\""
+   }
+  },
+  {
+   "t": 22401,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "research.select",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 7187,
+     "inputTokens": 2528,
+     "outputTokens": 162
+    }
+   }
+  },
+  {
+   "t": 22402,
+   "event": {
+    "type": "step",
+    "agent": "research",
+    "status": "done",
+    "detail": "Applicable: Section 34, Consumer Protection Act, 2019; Section 35, Consumer Protection Act, 2019; Section 39, Consumer Protection Act, 2019"
+   }
+  },
+  {
+   "t": 22417,
+   "event": {
+    "type": "step",
+    "agent": "rules",
+    "status": "done",
+    "detail": "Where to file · Which district · Last date to file · How to file · If you lose"
+   }
+  },
+  {
+   "t": 22417,
+   "event": {
+    "type": "step",
+    "agent": "drafter",
+    "status": "start",
+    "detail": "Drafting: Consumer complaint to the District Consumer Disputes Redressal Commission"
+   }
+  },
+  {
+   "t": 32004,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "drafter",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 9587,
+     "inputTokens": 1989,
+     "outputTokens": 1260
+    }
+   }
+  },
+  {
+   "t": 32005,
+   "event": {
+    "type": "step",
+    "agent": "drafter",
+    "status": "done"
+   }
+  },
+  {
+   "t": 32005,
+   "event": {
+    "type": "step",
+    "agent": "verifier",
+    "status": "start",
+    "detail": "Checking every citation against the statute text and every fact against your story"
+   }
+  },
+  {
+   "t": 39889,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "verifier.facts",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 7883,
+     "inputTokens": 1005,
+     "outputTokens": 375
+    }
+   }
+  },
+  {
+   "t": 41150,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "verifier.citations",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 9145,
+     "inputTokens": 2544,
+     "outputTokens": 537
+    }
+   }
+  },
+  {
+   "t": 41151,
+   "event": {
+    "type": "step",
+    "agent": "verifier",
+    "status": "done",
+    "detail": "Found 4 problem(s); sending the draft back"
+   }
+  },
+  {
+   "t": 41151,
+   "event": {
+    "type": "step",
+    "agent": "drafter",
+    "status": "start",
+    "detail": "Revising the draft"
+   }
+  },
+  {
+   "t": 51696,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "drafter",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 10545,
+     "inputTokens": 2186,
+     "outputTokens": 1146
+    }
+   }
+  },
+  {
+   "t": 58755,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "verifier.facts",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 7059,
+     "inputTokens": 844,
+     "outputTokens": 205
+    }
+   }
+  },
+  {
+   "t": 59954,
+   "event": {
+    "type": "usage",
+    "usage": {
+     "agent": "verifier.citations",
+     "model": "gemini-3.5-flash-lite",
+     "ms": 8258,
+     "inputTokens": 2406,
+     "outputTokens": 461
+    }
+   }
+  },
+  {
+   "t": 59954,
+   "event": {
+    "type": "step",
+    "agent": "verifier",
+    "status": "done",
+    "detail": "4/4 citations supported; 2 unsupported fact(s); needs your review"
+   }
+  },
+  {
+   "t": 59954,
+   "event": {
+    "type": "result",
+    "result": {
+     "intake": {
+      "language": "en",
+      "issueType": "consumer_complaint",
+      "summary": "The user purchased a Redmi phone for Rs 18,499 from a shop in Pune, which developed a screen issue within 10 days. The seller and service center have refused to repair or replace it under a false claim of physical damage.",
+      "facts": {
+       "incidentDate": "2026-09-02",
+       "amount": 18499,
+       "oppositeParty": "Redmi service centre and shop",
+       "place": "Pune, Maharashtra",
+       "applicationDate": null,
+       "lifeOrLiberty": false,
+       "reliefWanted": "replacement or refund"
+      },
+      "missingCritical": [],
+      "urgentDanger": false
+     },
+     "queries": [
+      "deficiency in service",
+      "unfair trade practice",
+      "complaint to District Commission"
+     ],
+     "selected": [
+      {
+       "id": "CPA-34",
+       "label": "Section 34, Consumer Protection Act, 2019",
+       "title": "",
+       "why": "Establishes the pecuniary and territorial jurisdiction of the District Commission for consumer complaints where goods value is under one crore rupees.",
+       "text": "34. (1) Subject to the other provisions of this Act, the District Commission shall have\njurisdiction to entertain complaints where the value of the goods or services paid as\nconsideration does not exceed one crore rupees:\nProvided that where the Central Government deems it necessary so to do, it may\nprescribe such other value, as it deems fit.\n(2) A complaint shall be instituted in a District Commission within the local limits of\nwhose jurisdiction,—\n(a) the opposite party or each of the opposite parties, where there are more than\none, at the time of the institution of the complaint, ordinarily resides or carries on\nbusiness or has a branch office or personally works for gain; or\n(b) any of the opposite parties, where there are more than one, at the time of the\ninstitution of the complaint, actually and voluntarily resides, or carries on business or\nhas a branch office, or personally works for gain, provided that in such case the\npermission of the District Commission is given; or\n(c) the cause of action, wholly or in part, arises; or\n(d) the complainant resides or personally works for gain.\nQualifications,\netc., of\nPresident and\nmembers of\nDistrict\nCommission.\nSalaries,\nallowances and\nother terms\nand conditions\nof service of\nPresident and\nmembers of\nDistrict\nCommission.\nTransitional\nprovision.\nVacancy in\noffice of\nmember of\nDistrict\nCommission.\nOfficers and\nother\nemployees of\nDistrict\nCommission.\nJurisdiction of\nDistrict\nCommission.\n\n(3) The District Commission shall ordinarily function in the district headquarters and\nmay perform its functions at such other place in the district, as the State Government may, in\nconsultation with the State Commission, notify in the Official Gazette from time to time.",
+       "source": "https://prsindia.org/files/bills_acts/bills_parliament/2021/Consumer%20Protection%20Act%202019.pdf"
+      },
+      {
+       "id": "CPA-35",
+       "label": "Section 35, Consumer Protection Act, 2019",
+       "title": "",
+       "why": "Provides the procedure for a consumer to file a complaint regarding defective goods sold or delivered.",
+       "text": "35. (1) A complaint, in relation to any goods sold or delivered or agreed to be sold or\ndelivered or any service provided or agreed to be provided, may be filed with a District\nCommission by—\n(a) the consumer,—\n(i) to whom such goods are sold or delivered or agreed to be sold or\ndelivered or such service is provided or agreed to be provided; or\n(ii) who alleges unfair trade practice in respect of such goods or service;\n(b) any recognised consumer association, whether the consumer to whom such\ngoods are sold or delivered or agreed to be sold or delivered or such service is provided\nor agreed to be provided, or who alleges unfair trade practice in respect of such goods\nor service, is a member of such association or not;\n(c) one or more consumers, where there are numerous consumers having the\nsame interest, with the permission of the District Commission, on behalf of, or for the\nbenefit of, all consumers so interested; or\n(d) the Central Government, the Central Authority or the State Government, as\nthe case may be:\nProvided that the complaint under this sub-section may be filed electronically in such\nmanner as may be prescribed.\nExplanation.—For the purposes of this sub-section, \"recognised consumer\nassociation\" means any voluntary consumer association registered under any law for the\ntime being in force.\n(2) Every complaint filed under sub-section (1) shall be accompanied with such fee\nand payable in such manner, including electronic form, as may be prescribed.",
+       "source": "https://prsindia.org/files/bills_acts/bills_parliament/2021/Consumer%20Protection%20Act%202019.pdf"
+      },
+      {
+       "id": "CPA-39",
+       "label": "Section 39, Consumer Protection Act, 2019",
+       "title": "",
+       "why": "Empowers the District Commission to order the replacement of defective goods or refund of price paid upon proof of defects.",
+       "text": "39. (1) Where the District Commission is satisfied that the goods complained against\nsuffer from any of the defects specified in the complaint or that any of the allegations\ncontained in the complaint about the services or any unfair trade practices, or claims for\ncompensation under product liability are proved, it shall issue an order to the opposite party\ndirecting him to do one or more of the following, namely:—\n(a) to remove the defect pointed out by the appropriate laboratory from the\ngoods in question;\n(b) to replace the goods with new goods of similar description which shall be\nfree from any defect;\n(c) to return to the complainant the price, or, as the case may be, the charges paid\nby the complainant along with such interest on such price or charges as may be\ndecided;\n(d) to pay such amount as may be awarded by it as compensation to the consumer\nfor any loss or injury suffered by the consumer due to the negligence of the opposite\nparty:\nProvided that the District Commission shall have the power to grant punitive\ndamages in such circumstances as it deems fit;\n(e) to pay such amount as may be awarded by it as compensation in a product\nliability action under Chapter VI;\n(f) to remove the defects in goods or deficiencies in the services in question;\n(g) to discontinue the unfair trade practice or restrictive trade practice and not to\nrepeat them;\n(h) not to offer the hazardous or unsafe goods for sale;\n(i) to withdraw the hazardous goods from being offered for sale;\n(j) to cease manufacture of hazardous goods and to desist from offering services\nwhich are hazardous in nature;\n(k) to pay such sum as may be determined by it, if it is of the opinion that loss or\ninjury has been suffered by a large number of consumers who are not identifiable\nconveniently:\nProvided that the minimum amount of sum so payable shall not be less than\ntwenty-five per cent. of the value of such defective goods sold or service provided, as\nthe case may be, to such consumers;\nFindings of\nDistrict\nCommission.\n45 of 1860.\n2 of 1974.\n5 of 1908.\n5 of 1908.\n\n(l) to issue corrective advertisement to neutralise the effect of misleading\nadvertisement at the cost of the opposite party responsible for issuing such misleading\nadvertisement;\n(m) to provide for adequate costs to parties; and\n(n) to cease and desist from issuing any misleading advertisement.\n(2) Any amount obtained under sub-section (1) shall be credited to such fund and\nutilised in such manner as may be prescribed.\n(3) In any proceeding conducted by the President and a member and if they differ on\nany point or points, they shall state the point or points on which they differ and refer the\nsame to another member for hearing on such point or points and the opinion of the majority\nshall be the order of the District Commission:\nProvided that the other member shall give his opinion on such point or points referred\nto him within a period of one month from the date of such reference.\n(4) Every order made by the District Commission under sub-section (1) shall be signed\nby the President and the member who conducted the proceeding:\nProvided that where the order is made as per majority opinion under sub-section (3),\nsuch order shall also be signed by the other member.",
+       "source": "https://prsindia.org/files/bills_acts/bills_parliament/2021/Consumer%20Protection%20Act%202019.pdf"
+      },
+      {
+       "id": "CPA-69",
+       "label": "Section 69, Consumer Protection Act, 2019",
+       "title": "",
+       "why": "Procedure: last date to file - Within two years of the cause of action: by 2028-09-02. A late complaint needs an application showing sufficient cause for the delay.",
+       "text": "69. (1) The District Commission, the State Commission or the National Commission\nshall not admit a complaint unless it is filed within two years from the date on which the\ncause of action has arisen.\n(2) Notwithstanding anything contained in sub-section (1), a complaint may be\nentertained after the period specified in sub-section (1), if the complainant satisfies the\nDistrict Commission, the State Commission or the National Commission, as the case may be,\nthat he had sufficient cause for not filing the complaint within such period:\nProvided that no such complaint shall be entertained unless the District Commission\nor the State Commission or the National Commission, as the case may be, records its reasons\nfor condoning such delay.",
+       "source": "https://prsindia.org/files/bills_acts/bills_parliament/2021/Consumer%20Protection%20Act%202019.pdf"
+      },
+      {
+       "id": "CPA-41",
+       "label": "Section 41, Consumer Protection Act, 2019",
+       "title": "",
+       "why": "Procedure: if you lose - Appeal from the District Commission to the State Commission within 45 days of the order.",
+       "text": "41. Any person aggrieved by an order made by the District Commission may prefer an\nappeal against such order to the State Commission on the grounds of facts or law within a\nperiod of forty-five days from the date of the order, in such form and manner, as may be\nprescribed:\nProvided that the State Commission may entertain an appeal after the expiry of the said\nperiod of forty-five days, if it is satisfied that there was sufficient cause for not filing it within\nthat period:\nProvided further that no appeal by a person, who is required to pay any amount in\nterms of an order of the District Commission, shall be entertained by the State Commission\nunless the appellant has deposited fifty per cent. of that amount in the manner as may be\nprescribed:\nProvided also that no appeal shall lie from any order passed under sub-section (1) of\nsection 81 by the District Commission pursuant to a settlement by mediation under\nsection 80.",
+       "source": "https://prsindia.org/files/bills_acts/bills_parliament/2021/Consumer%20Protection%20Act%202019.pdf"
+      }
+     ],
+     "rules": [
+      {
+       "key": "forum",
+       "label": "Where to file",
+       "value": "District Consumer Disputes Redressal Commission (amount paid ₹18,499 is within ₹50 lakh)",
+       "basis": [
+        {
+         "section": "CPA-34"
+        },
+        {
+         "instrument": "Consumer Protection (Jurisdiction of the District Commission, the State Commission and the National Commission) Rules, 2021"
+        }
+       ]
+      },
+      {
+       "key": "territorial",
+       "label": "Which district",
+       "value": "Where the seller or service provider resides, carries on business or has a branch, or where you reside or personally work, or where the cause of action arose.",
+       "basis": [
+        {
+         "section": "CPA-34"
+        }
+       ]
+      },
+      {
+       "key": "limitation",
+       "label": "Last date to file",
+       "value": "Within two years of the cause of action: by 2028-09-02. A late complaint needs an application showing sufficient cause for the delay.",
+       "date": "2028-09-02",
+       "basis": [
+        {
+         "section": "CPA-69"
+        }
+       ]
+      },
+      {
+       "key": "filing",
+       "label": "How to file",
+       "value": "In person, by post, or online on the e-Daakhil portal (edaakhil.nic.in). No court fee for claims up to ₹5 lakh; check e-Daakhil for the current fee above that. A lawyer is not required.",
+       "basis": [
+        {
+         "section": "CPA-35"
+        },
+        {
+         "instrument": "Consumer Protection (Consumer Commission Procedure) Regulations, 2020"
+        }
+       ]
+      },
+      {
+       "key": "appeal",
+       "label": "If you lose",
+       "value": "Appeal from the District Commission to the State Commission within 45 days of the order.",
+       "basis": [
+        {
+         "section": "CPA-41"
+        }
+       ]
+      }
+     ],
+     "draft": {
+      "documentTitle": "Consumer Complaint under Section 35 of the Consumer Protection Act, 2019",
+      "addressedTo": "To, The President / Members, District Consumer Disputes Redressal Commission, [Name of District, e.g., Pune], [State]",
+      "body": "BEFORE THE DISTRICT CONSUMER DISPUTES REDRESSAL COMMISSION, [Name of District] \\n\\nCONSUMER COMPLAINT NO. [Insert Number, if allotted] OF 20[YY] \\n\\nIN THE MATTER OF: \\n[Your Full Name], \\n[Your Complete Residential Address], \\n... Complainant \\n\\nVERSUS \\n1. [Name/Title of the Shop], \\n[Address of the Shop], \\n2. [Name/Title of the Redmi Service Centre], \\n[Address of the Service Centre], \\n... Opposite Parties \\n\\nCOMPLAINT UNDER [[CPA-35]] [[CPA-35]] \\n\\nMOST RESPECTFULLY SHOWETH: \\n\\n1. That the Complainant is a consumer who purchased a Redmi phone for the total amount of Rs 18,499/- on [Date of purchase, e.g., 2026-09-02] from the Opposite Party shop located in Pune, Maharashtra. [If applicable: The copy of the purchase invoice is annexed herewith as Annexure-A]. \\n\\n2. That within 10 days of the said purchase, the Redmi phone developed a severe screen issue, rendering the device defective and unfit for normal usage. \\n\\n3. That the Complainant approached the Opposite Parties (the shop and the authorized service centre) for repair or replacement of the defective product. However, the Opposite Parties refused to repair or replace the phone under a false and baseless claim of physical damage. \\n\\n4. That the sale of a defective product followed by a refusal to provide warranty service or replacement constitutes a deficiency in service and unfair trade practice on the part of the Opposite Parties, causing severe mental agony and financial loss to the Complainant. \\n\\n5. That this Hon'ble District Commission has the pecuniary and territorial jurisdiction to entertain and adjudicate the present complaint under [[CPA-34]], as the total value of the goods paid as consideration is Rs 18,499/-, which is well within the statutory limit, and the cause of action arose within the local limits of the jurisdiction of this Commission at Pune, Maharashtra. \\n\\n6. That the present complaint is being filed within the limitation period of two years from the date the cause of action arose, in accordance with [[CPA-69]]. \\n\\n[If already reported to consumer helpline/authorities: Details of prior representation, e.g., Grievance ID ...] \\n\\nPRAYER \\n\\nIn light of the facts and circumstances detailed above, the Complainant respectfully prays that this Hon'ble Commission may be pleased to: \\n(a) Direct the Opposite Parties, jointly and severally, to replace the defective Redmi phone with a new device of similar description which is free from any defect, or alternatively, to refund the full price of Rs 18,499/- paid by the Complainant along with appropriate interest, pursuant to [[CPA-39]]; \\n(b) Award suitable compensation to the Complainant for mental agony, harassment, and deficiency in service caused by the Opposite Parties; \\n(c) Pass any other order(s) as this Hon'ble Commission may deem fit and proper in the interest of justice. \\n\\nLIST OF DOCUMENTS ATTACHED: \\n1. Copy of Purchase Invoice [if available / placeholder: Annexure-A] \\n2. Job sheet or service centre refusal slip [if available / placeholder: Annexure-B] \\n\\nPlace: Pune, Maharashtra \\nDate: [Date of filing] \\n\\n[Signature] \\n[Your Full Name] \\nComplainant in Person",
+      "placeholders": [
+       "Name of District, e.g., Pune",
+       "State",
+       "Insert Number, if allotted",
+       "Your Full Name",
+       "Your Complete Residential Address",
+       "Name/Title of the Shop",
+       "Address of the Shop",
+       "Name/Title of the Redmi Service Centre",
+       "Address of the Service Centre",
+       "Date of purchase, e.g., 2026-09-02",
+       "Date of filing"
+      ],
+      "plainSummary": "This document is a formal consumer complaint addressed to the District Consumer Disputes Redressal Commission under the Consumer Protection Act, 2019, regarding a defective Redmi phone purchased for Rs 18,499 that the seller and service center refused to fix under false claims of physical damage. It details the facts of the case, cites relevant legal provisions for jurisdiction and relief, and asks the commission to order a replacement or refund along with compensation. The next step is to fill in the bracketed placeholders, attach your invoice and any service records, and file the complaint in person, by post, or online via the e-Daakhil portal before the limitation deadline."
+     },
+     "verification": {
+      "ok": false,
+      "codeIssues": [],
+      "checks": [
+       {
+        "id": "CPA-35",
+        "claim": "COMPLAINT UNDER [[CPA-35]] [[CPA-35]]",
+        "supported": true,
+        "note": "Section 35 of the Consumer Protection Act, 2019 governs the manner in which a complaint is filed before a District Commission."
+       },
+       {
+        "id": "CPA-34",
+        "claim": "That this Hon'ble District Commission has the pecuniary and territorial jurisdiction to entertain and adjudicate the present complaint under [[CPA-34]], as the total value of the goods paid as consideration is Rs 18,499/-, which is well within the statutory limit, and the cause of action arose within the local limits of the jurisdiction of this Commission at Pune, Maharashtra.",
+        "supported": true,
+        "note": "Section 34 outlines the pecuniary jurisdiction limits and territorial jurisdiction rules for the District Commission."
+       },
+       {
+        "id": "CPA-69",
+        "claim": "That the present complaint is being filed within the limitation period of two years from the date the cause of action arose, in accordance with [[CPA-69]].",
+        "supported": true,
+        "note": "Section 69 specifies the two-year limitation period from the date the cause of action arose for admitting a complaint."
+       },
+       {
+        "id": "CPA-39",
+        "claim": "(a) Direct the Opposite Parties, jointly and severally, to replace the defective Redmi phone with a new device of similar description which is free from any defect, or alternatively, to refund the full price of Rs 18,499/- paid by the Complainant along with appropriate interest, pursuant to [[CPA-39]];",
+        "supported": true,
+        "note": "Section 39 empowers the District Commission to order the replacement of goods or refund of price with interest upon proving defects or unfair trade practices."
+       }
+      ],
+      "factIssues": [
+       {
+        "statement": "That the Complainant is a consumer who purchased a Redmi phone for the total amount of Rs 18,499/- on […] from the Opposite Party shop located in Pune, Maharashtra. […]",
+        "problem": "The story does not mention Maharashtra, only Pune."
+       },
+       {
+        "statement": "That this Hon'ble District Commission has the pecuniary and territorial jurisdiction to entertain and adjudicate the present complaint under (law), as the total value of the goods paid as consideration is Rs 18,499/-, which is well within the statutory limit, and the cause of action arose within the local limits of the jurisdiction of this Commission at Pune, Maharashtra.",
+        "problem": "The story does not mention Maharashtra, only Pune."
+       }
+      ]
+     },
+     "revised": true,
+     "disclaimer": "NyayaSathi gives legal information and drafts, not legal advice. Check the document, fill every [placeholder], and consult a lawyer or your District Legal Services Authority for anything serious.",
+     "help": [
+      "Free legal aid: call the NALSA helpline 15100 or visit your District Legal Services Authority (Legal Services Authorities Act, 1987)."
+     ]
+    }
+   }
+  }
+ ]
+}

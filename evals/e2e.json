@@ -1,0 +1,14 @@
+[
+  {"story": "I bought a washing machine for Rs 32,000 from an electronics store in Nagpur on 5 August 2026. It stopped spinning after two weeks. The store says the warranty does not cover it and the company has not sent a technician despite three complaints.", "issue": "consumer_complaint", "mustCite": ["CPA-35"]},
+  {"story": "An airline cancelled my flight from Mumbai to Delhi on 1 October 2026 without notice and has not refunded the Rs 9,800 fare even after a month.", "issue": "consumer_complaint", "mustCite": ["CPA-35"]},
+  {"story": "I want to see the attendance register and salary records of the teachers at the government school in my village in Satara district for the year 2025-26.", "issue": "rti_application", "mustCite": ["RTI-6"]},
+  {"story": "I filed an RTI application with the district collector office in Jaipur on 10 August 2026 asking for land records. It has been more than 30 days and I have received no reply.", "issue": "rti_first_appeal", "mustCite": ["RTI-19"]},
+  {"story": "My neighbour attacked me with a stick yesterday in Lucknow over a parking dispute and I have bruises on my arm. I want to file a police complaint.", "issue": "police_complaint", "mustCite": ["BNSS-173"]},
+  {"story": "Someone has been calling my sister repeatedly and threatening to kill her if she does not pay him Rs 50,000. We live in Bengaluru.", "issue": "police_complaint", "mustCite": ["BNSS-173"]},
+  {"story": "I got a link on WhatsApp for a part-time job, they asked me to pay Rs 15,000 as a registration fee by UPI and then blocked me. I am in Hyderabad.", "issue": "cyber_fraud", "mustCite": ["BNSS-173"]},
+  {"story": "Someone created a fake Instagram account with my photos and name and is messaging my friends asking for money.", "issue": "cyber_fraud", "mustCite": ["BNSS-173"]},
+  {"story": "मैंने ऑनलाइन एक फ्रिज मंगवाया था, 25,000 रुपये दिए, लेकिन टूटा हुआ फ्रिज आया और कंपनी रिफंड नहीं दे रही। मैं भोपाल में रहता हूं।", "issue": "consumer_complaint", "mustCite": ["CPA-35"]},
+  {"story": "माझ्या भावाला काल रात्री कोणीतरी मारहाण केली आणि त्याचा मोबाईल हिसकावून नेला. आम्ही पुण्यात राहतो.", "issue": "police_complaint", "mustCite": ["BNSS-173"]},
+  {"story": "My brother and I are fighting over how to divide our late father's house in Kolhapur.", "issue": "out_of_scope", "mustCite": []},
+  {"story": "My landlord is not returning my security deposit of Rs 40,000 after I vacated the flat.", "issue": "out_of_scope", "mustCite": []}
+]

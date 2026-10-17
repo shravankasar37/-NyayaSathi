@@ -1,5 +1,6 @@
 // Runs the agent pipeline and streams its trace to the browser as server-sent events.
 import { runPipeline, type TraceEvent } from "@/lib/agents";
+import { isQuotaError } from "@/lib/llm";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -17,7 +18,12 @@ export async function POST(req: Request) {
         await runPipeline(story.trim(), emit, answers?.trim() || undefined);
       } catch (err) {
         console.error(err);
-        emit({ type: "error", message: err instanceof Error ? err.message : "Something went wrong" });
+        // every provider and model in the fallback chain is out of free quota: tell the UI to offer recorded runs
+        if (isQuotaError(err)) {
+          emit({ type: "error", code: "quota", message: "Today's free AI quota is used up. Watch a recorded run of an example, or try again tomorrow." });
+        } else {
+          emit({ type: "error", message: err instanceof Error ? err.message : "Something went wrong" });
+        }
       } finally {
         controller.close();
       }

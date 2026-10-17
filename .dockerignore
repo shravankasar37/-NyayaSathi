@@ -1,0 +1,7 @@
+node_modules
+.next
+.cache
+.env*
+!.env.example
+.git
+evals/e2e-log.txt
