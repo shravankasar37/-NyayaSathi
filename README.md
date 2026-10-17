@@ -5,7 +5,7 @@
 > and you get a ready-to-file complaint in which **every citation is checked against the statute text and every
 > fact against your own words**.
 
-**Live demo:** {{LIVE_URL}} · Built by [Shravan Kasar](https://github.com/shravankasar37)
+**Live demo:** [nyayasathi-xnmm.onrender.com](https://nyayasathi-xnmm.onrender.com) (free tier: the first visit after 15 idle minutes takes ~50 s to wake) · Built by [Shravan Kasar](https://github.com/shravankasar37)
 
 ---
 
@@ -95,7 +95,7 @@ BNSS s.173 "irrespective of the area").
   a fact-faithfulness check against the user's own story, with a revise loop.
 - **Responsible scope:** it refuses family, property, tenancy and employment matters rather than guessing, and
   points to free legal aid (NALSA 15100).
-- **Runs at ₹0:** Gemini free tier with a model fallback chain (overloaded or rate-limited models fail over),
+- **Runs at ₹0:** multi-provider routing across free tiers, Groq (gpt-oss-120b, Qwen 3.8) first and Gemini as backup; rate-limited, overloaded or malformed responses fail over and per-minute limits are waited out,
   BM25-only retrieval if the embedding service is down, and **recorded runs** so the demo works even when the day's
   free quota is used up.
 
