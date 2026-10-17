@@ -213,9 +213,20 @@ export default function Home() {
                     <h2 className="font-semibold">{result.draft.documentTitle}</h2>
                     <p className="text-xs" style={{ color: "var(--muted)" }}>To: {result.draft.addressedTo}</p>
                   </div>
-                  <span className="rounded-full px-2.5 py-1 text-xs font-medium" style={{ background: result.verification.ok ? "var(--ok-soft)" : "var(--warn-soft)", color: result.verification.ok ? "var(--ok)" : "var(--warn)" }}>
-                    {result.verification.ok ? `✓ ${supported}/${result.verification.checks.length} citations verified` : "⚠ some citations need review"}
-                  </span>
+                  {(() => {
+                    const total = result.verification.checks.length;
+                    const allCited = supported === total && result.verification.codeIssues.length === 0;
+                    return (
+                      <span className="rounded-full px-2.5 py-1 text-xs font-medium" style={{ background: allCited ? "var(--ok-soft)" : "var(--warn-soft)", color: allCited ? "var(--ok)" : "var(--warn)" }}>
+                        {allCited ? "✓" : "⚠"} {supported}/{total} citations verified
+                      </span>
+                    );
+                  })()}
+                  {result.verification.factIssues.length > 0 && (
+                    <button onClick={() => setTab("checks")} className="rounded-full px-2.5 py-1 text-xs font-medium" style={{ background: "var(--warn-soft)", color: "var(--warn)" }}>
+                      {result.verification.factIssues.length} statement{result.verification.factIssues.length > 1 ? "s" : ""} to check
+                    </button>
+                  )}
                   <button onClick={downloadDocx} className="rounded-lg px-4 py-2 text-sm font-semibold text-white" style={{ background: "var(--accent)" }}>Download .docx</button>
                 </div>
 
@@ -272,6 +283,13 @@ export default function Home() {
                     <div className="space-y-3 text-sm">
                       {result.revised && <p style={{ color: "var(--warn)" }}>The first draft failed verification and was revised by the drafting agent.</p>}
                       {result.verification.codeIssues.map((c) => <p key={c} style={{ color: "var(--bad)" }}>✗ {c}</p>)}
+                      {result.verification.factIssues.map((f, i) => (
+                        <div key={`f${i}`} className="rounded-lg border p-3" style={{ borderColor: "var(--line)", background: "var(--warn-soft)" }}>
+                          <div style={{ color: "var(--warn)" }}>⚠ Check this statement before filing: it says more than you told me</div>
+                          <div className="mt-1 italic">"{f.statement}"</div>
+                          <div className="mt-1 text-xs" style={{ color: "var(--muted)" }}>{f.problem}</div>
+                        </div>
+                      ))}
                       {result.verification.checks.map((c, i) => (
                         <div key={i} className="rounded-lg border p-3" style={{ borderColor: "var(--line)" }}>
                           <div style={{ color: c.supported ? "var(--ok)" : "var(--bad)" }}>{c.supported ? "✓ supported" : "✗ not supported"} · {labels[c.id] ?? c.id}</div>

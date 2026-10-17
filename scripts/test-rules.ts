@@ -45,6 +45,7 @@ const statuteClaims: [string, string][] = [
   ["CPA-69", "two years from the date on which the cause of action has arisen"],
   ["CPA-35", "electronic"],
   ["CPA-41", "forty-five days"],
+  ["RTI-6", "shall not be required to give any reason"],
   ["RTI-7", "thirty days"],
   ["RTI-7", "forty-eight hours"],
   ["RTI-7", "below poverty line"],
