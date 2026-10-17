@@ -1,36 +1,36 @@
 {
- "at": "2026-10-17T14:48:19.446Z",
+ "at": "2026-10-17T19:51:45.194Z",
  "summary": {
   "cases": 12,
-  "issueAccuracy": 0.4166666666666667,
-  "outOfScopeAbstained": "2/2",
-  "draftsProduced": "3/10",
-  "mustCiteCoverage": 1,
-  "citationsSupported": "19/19",
+  "issueAccuracy": 0.08333333333333333,
+  "outOfScopeAbstained": "1/2",
+  "draftsProduced": "0/10",
+  "mustCiteCoverage": 0,
+  "citationsSupported": "0/0",
   "invalidCitations": 0,
-  "draftsWithFactFlags": "1/3",
-  "revisedByVerifier": "2/3",
-  "medianSeconds": 54.68,
-  "avgCalls": 8.333333333333334,
-  "avgTokens": 16778
+  "draftsWithFactFlags": "0/0",
+  "revisedByVerifier": "0/0",
+  "medianSeconds": 0,
+  "avgCalls": 0,
+  "avgTokens": 0
  },
  "rows": [
   {
    "story": "I bought a washing machine for Rs 32,000 from an electronics store in ",
    "expected": "consumer_complaint",
-   "got": "consumer_complaint",
-   "outcome": "draft",
-   "issueOk": true,
-   "mustCiteOk": true,
-   "citations": 5,
-   "supported": 5,
+   "got": "",
+   "outcome": "error",
+   "issueOk": false,
+   "mustCiteOk": false,
+   "citations": 0,
+   "supported": 0,
    "invalidCitations": 0,
-   "factIssues": 5,
-   "revised": true,
-   "seconds": 67.414,
-   "calls": 10,
-   "tokens": 22854,
-   "error": ""
+   "factIssues": 0,
+   "revised": false,
+   "seconds": 10.415,
+   "calls": 4,
+   "tokens": 8929,
+   "error": "Error: groq openai/gpt-oss-20b 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01kxbt21zbfjgvh56rxqpv8jnw` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 4512, Requested 5847. Please try again in 17.6925s. Need more tokens? Upgrade to Dev Tier today at https://con"
   },
   {
    "story": "An airline cancelled my flight from Mumbai to Delhi on 1 October 2026 ",
@@ -44,10 +44,10 @@
    "invalidCitations": 0,
    "factIssues": 0,
    "revised": false,
-   "seconds": 38.098,
-   "calls": 4,
-   "tokens": 7075,
-   "error": "ApiError: {\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite\\nPlease retry in 32.669886386s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-3.5-flash-lite\"},\"quotaValue\":\"15\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"32s\"}]}}"
+   "seconds": 2.106,
+   "calls": 2,
+   "tokens": 1980,
+   "error": "Error: groq openai/gpt-oss-20b 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01kxbt21zbfjgvh56rxqpv8jnw` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6212, Requested 3804. Please try again in 15.12s. Need more tokens? Upgrade to Dev Tier today at https://conso"
   },
   {
    "story": "I want to see the attendance register and salary records of the teache",
@@ -61,10 +61,10 @@
    "invalidCitations": 0,
    "factIssues": 0,
    "revised": false,
-   "seconds": 7.663,
+   "seconds": 0.175,
    "calls": 0,
    "tokens": 0,
-   "error": "ApiError: {\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite\\nPlease retry in 25.188870095s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"model\":\"gemini-3.5-flash-lite\",\"location\":\"global\"},\"quotaValue\":\"15\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"25s\"}]}}"
+   "error": "Error: groq openai/gpt-oss-20b 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01kxbt21zbfjgvh56rxqpv8jnw` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6189, Requested 2772. Please try again in 7.2075s. Need more tokens? Upgrade to Dev Tier today at https://cons"
   },
   {
    "story": "I filed an RTI application with the district collector office in Jaipu",
@@ -78,10 +78,10 @@
    "invalidCitations": 0,
    "factIssues": 0,
    "revised": false,
-   "seconds": 50.297,
-   "calls": 7,
-   "tokens": 11682,
-   "error": "ApiError: {\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite\\nPlease retry in 34.702571274s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"model\":\"gemini-3.5-flash-lite\",\"location\":\"global\"},\"quotaValue\":\"15\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"34s\"}]}}"
+   "seconds": 0.169,
+   "calls": 0,
+   "tokens": 0,
+   "error": "Error: groq openai/gpt-oss-20b 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01kxbt21zbfjgvh56rxqpv8jnw` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6167, Requested 2223. Please try again in 2.925s. Need more tokens? Upgrade to Dev Tier today at https://conso"
   },
   {
    "story": "My neighbour attacked me with a stick yesterday in Lucknow over a park",
@@ -95,10 +95,10 @@
    "invalidCitations": 0,
    "factIssues": 0,
    "revised": false,
-   "seconds": 7.242,
+   "seconds": 1.674,
    "calls": 0,
    "tokens": 0,
-   "error": "ApiError: {\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite\\nPlease retry in 27.490429475s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-3.5-flash-lite\"},\"quotaValue\":\"15\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"27s\"}]}}"
+   "error": "Error: groq openai/gpt-oss-20b 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01kxbt21zbfjgvh56rxqpv8jnw` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5944, Requested 2674. Please try again in 4.635s. Need more tokens? Upgrade to Dev Tier today at https://conso"
   },
   {
    "story": "Someone has been calling my sister repeatedly and threatening to kill ",
@@ -112,10 +112,10 @@
    "invalidCitations": 0,
    "factIssues": 0,
    "revised": false,
-   "seconds": 51.124,
-   "calls": 7,
-   "tokens": 11400,
-   "error": "ApiError: {\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite\\nPlease retry in 36.334694372s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-3.5-flash-lite\"},\"quotaValue\":\"15\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"36s\"}]}}"
+   "seconds": 0.504,
+   "calls": 0,
+   "tokens": 0,
+   "error": "Error: groq openai/gpt-oss-20b 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01kxbt21zbfjgvh56rxqpv8jnw` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5877, Requested 2768. Please try again in 4.8375s. Need more tokens? Upgrade to Dev Tier today at https://cons"
   },
   {
    "story": "I got a link on WhatsApp for a part-time job, they asked me to pay Rs ",
@@ -129,10 +129,10 @@
    "invalidCitations": 0,
    "factIssues": 0,
    "revised": false,
-   "seconds": 7.29,
+   "seconds": 0.153,
    "calls": 0,
    "tokens": 0,
-   "error": "ApiError: {\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite\\nPlease retry in 29.025021744s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-3.5-flash-lite\"},\"quotaValue\":\"15\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"29s\"}]}}"
+   "error": "Error: groq openai/gpt-oss-20b 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01kxbt21zbfjgvh56rxqpv8jnw` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5856, Requested 2682. Please try again in 4.035s. Need more tokens? Upgrade to Dev Tier today at https://conso"
   },
   {
    "story": "Someone created a fake Instagram account with my photos and name and i",
@@ -146,44 +146,44 @@
    "invalidCitations": 0,
    "factIssues": 0,
    "revised": false,
-   "seconds": 60.505,
-   "calls": 8,
-   "tokens": 14898,
-   "error": "ApiError: {\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite\\nPlease retry in 28.650220703s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-3.5-flash-lite\"},\"quotaValue\":\"15\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"28s\"}]}}"
+   "seconds": 1.061,
+   "calls": 0,
+   "tokens": 0,
+   "error": "Error: groq openai/gpt-oss-20b 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01kxbt21zbfjgvh56rxqpv8jnw` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5715, Requested 2662. Please try again in 2.8275s. Need more tokens? Upgrade to Dev Tier today at https://cons"
   },
   {
    "story": "मैंने ऑनलाइन एक फ्रिज मंगवाया था, 25,000 रुपये दिए, लेकिन टूटा हुआ फ्र",
    "expected": "consumer_complaint",
-   "got": "consumer_complaint",
-   "outcome": "draft",
-   "issueOk": true,
-   "mustCiteOk": true,
-   "citations": 4,
-   "supported": 4,
+   "got": "",
+   "outcome": "error",
+   "issueOk": false,
+   "mustCiteOk": false,
+   "citations": 0,
+   "supported": 0,
    "invalidCitations": 0,
    "factIssues": 0,
-   "revised": true,
-   "seconds": 54.68,
-   "calls": 9,
-   "tokens": 17239,
-   "error": ""
+   "revised": false,
+   "seconds": 0.16,
+   "calls": 0,
+   "tokens": 0,
+   "error": "Error: groq openai/gpt-oss-20b 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01kxbt21zbfjgvh56rxqpv8jnw` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5693, Requested 2685. Please try again in 2.835s. Need more tokens? Upgrade to Dev Tier today at https://conso"
   },
   {
    "story": "माझ्या भावाला काल रात्री कोणीतरी मारहाण केली आणि त्याचा मोबाईल हिसकावू",
    "expected": "police_complaint",
-   "got": "police_complaint",
-   "outcome": "draft",
-   "issueOk": true,
-   "mustCiteOk": true,
-   "citations": 10,
-   "supported": 10,
+   "got": "",
+   "outcome": "error",
+   "issueOk": false,
+   "mustCiteOk": false,
+   "citations": 0,
+   "supported": 0,
    "invalidCitations": 0,
    "factIssues": 0,
    "revised": false,
-   "seconds": 38.091,
-   "calls": 6,
-   "tokens": 10241,
-   "error": ""
+   "seconds": 0.297,
+   "calls": 0,
+   "tokens": 0,
+   "error": "Error: groq openai/gpt-oss-20b 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01kxbt21zbfjgvh56rxqpv8jnw` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5669, Requested 2677. Please try again in 2.594999999s. Need more tokens? Upgrade to Dev Tier today at https:/"
   },
   {
    "story": "My brother and I are fighting over how to divide our late father's hou",
@@ -197,27 +197,27 @@
    "invalidCitations": 0,
    "factIssues": 0,
    "revised": false,
-   "seconds": 6.451,
+   "seconds": 1.108,
    "calls": 1,
-   "tokens": 458,
+   "tokens": 1352,
    "error": ""
   },
   {
    "story": "My landlord is not returning my security deposit of Rs 40,000 after I ",
    "expected": "out_of_scope",
-   "got": "out_of_scope",
-   "outcome": "abstain",
-   "issueOk": true,
+   "got": "",
+   "outcome": "error",
+   "issueOk": false,
    "mustCiteOk": true,
    "citations": 0,
    "supported": 0,
    "invalidCitations": 0,
    "factIssues": 0,
    "revised": false,
-   "seconds": 6.35,
-   "calls": 1,
-   "tokens": 469,
-   "error": ""
+   "seconds": 0.171,
+   "calls": 0,
+   "tokens": 0,
+   "error": "Error: groq openai/gpt-oss-20b 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01kxbt21zbfjgvh56rxqpv8jnw` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6836, Requested 2204. Please try again in 7.8s. Need more tokens? Upgrade to Dev Tier today at https://console"
   }
  ]
 }
