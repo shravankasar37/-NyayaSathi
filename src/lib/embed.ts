@@ -7,9 +7,12 @@ export const EMBED_DIM = 384;
 
 env.cacheDir = process.env.NYAYA_MODEL_CACHE ?? ".cache/models";
 
+// pipeline()'s overload union is too large for tsc (TS2590); this is the one overload we use
+const featureExtraction = pipeline as unknown as (task: "feature-extraction", model: string, opts: { dtype: "q8" }) => Promise<FeatureExtractionPipeline>;
+
 let extractor: Promise<FeatureExtractionPipeline> | null = null;
 function getExtractor() {
-  extractor ??= pipeline("feature-extraction", EMBED_MODEL, { dtype: "q8" }) as Promise<FeatureExtractionPipeline>;
+  extractor ??= featureExtraction("feature-extraction", EMBED_MODEL, { dtype: "q8" });
   return extractor;
 }
 
