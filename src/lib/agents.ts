@@ -55,7 +55,8 @@ Issue types: consumer_complaint (defective goods, deficient service, unfair trad
 rti_application (wants information from a government body); rti_first_appeal (already applied under RTI and got no or an unsatisfactory reply);
 police_complaint (a crime such as theft, cheating, threats, assault, harassment, where an FIR is needed);
 cyber_fraud (online or phone fraud, hacking, impersonation, UPI/OTP scams); out_of_scope (anything else, for example family, property, tenancy, employment or tax disputes).
-Never invent facts. Use null when a fact is not stated. Only list a missing question if the document truly cannot be written without it; placeholders like [your address] are fine for personal details.`;
+Never invent facts. Use null when a fact is not stated.
+missingCritical is for when the legal problem itself is unclear (you cannot tell what happened, against whom, or which issue type applies). Never ask for identifiers or details the user can fill into the document later: names, addresses, phone numbers, transaction or UTR numbers, bill or order numbers, document dates. Those become [placeholders]. Usually missingCritical is empty.`;
 
 export async function intakeAgent(story: string, onUsage: (u: Usage) => void): Promise<Intake> {
   return generateJson(IntakeSchema, {
@@ -95,14 +96,20 @@ async function retrieveAll(queries: string[], acts: string[]) {
   return [...pool.values()].sort((a, b) => b.score - a.score).slice(0, 14);
 }
 
-export async function researchAgent(intake: Intake, emit: (e: TraceEvent) => void, onUsage: (u: Usage) => void): Promise<{ selected: Selected[]; queries: string[] }> {
-  const q = await generateJson(QuerySchema, {
+// Query rewriting: the citizen's everyday words -> the vocabulary the statutes use.
+// (Keep examples here out of evals/retrieval.json, or the eval measures the prompt, not the method.)
+export async function rewriteQueries(problem: string, onUsage: (u: Usage) => void) {
+  return generateJson(QuerySchema, {
     agent: "research.rewrite",
-    system: `You turn a citizen's problem into precise legal search queries for Indian bare acts. Use statutory vocabulary (for example "snatching", "mischief", "cheating by personation", "deficiency in service", "officer in charge of a police station refuses to record information"), not the user's words. Cover both the substantive right or offence and the procedure to enforce it.\n${ACT_GUIDE}`,
-    prompt: `Issue type: ${intake.issueType}\nSummary: ${intake.summary}\nFacts: ${JSON.stringify(intake.facts)}`,
+    system: `You turn a citizen's problem into precise legal search queries for Indian bare acts. Name the offence, right or duty the way the statute itself names it (for example "deficiency in service" rather than "bad service"), not in the user's everyday words, and translate non-English input. Cover both the substantive right or offence and the procedure to enforce it.\n${ACT_GUIDE}`,
+    prompt: problem,
     temperature: 0,
     onUsage,
   });
+}
+
+export async function researchAgent(intake: Intake, emit: (e: TraceEvent) => void, onUsage: (u: Usage) => void): Promise<{ selected: Selected[]; queries: string[] }> {
+  const q = await rewriteQueries(`Issue type: ${intake.issueType}\nSummary: ${intake.summary}\nFacts: ${JSON.stringify(intake.facts)}`, onUsage);
   const queries = [...q.queries];
   emit({ type: "step", agent: "research", status: "start", detail: `Searching: ${queries.map((x) => `"${x}"`).join(", ")}` });
 
@@ -150,6 +157,7 @@ export async function drafterAgent(intake: Intake, selected: Selected[], rules: 
     system: `You draft formal Indian legal documents for citizens who cannot afford a lawyer.
 Write a complete "${DOC_TITLES[issue]}" in English (formal documents to Indian authorities are filed in English), with: addressee, subject, numbered facts, the legal grounds, the relief or information sought, a list of documents attached, place, date and signature lines.
 Rules: cite a law only by writing its marker exactly like [[CPA-35]], and only markers from the LAW list. Never write a section number any other way. Never invent facts: use [bracketed placeholders] for anything not given. Use the forum and deadlines from the RULES list as they are; do not compute your own.
+The RULES are advice for the user, not facts: never write that the user has already done something (reported to a helpline, informed the bank, sent a notice, visited an office) unless the FACTS say so. If such a step is relevant, add it as an optional bracketed line, for example "[If already reported on cybercrime.gov.in: acknowledgement number ...]".
 The plainSummary must be written in ${LANG[intake.language]}.`,
     prompt: `FACTS\n${intake.summary}\n${JSON.stringify(intake.facts, null, 1)}\n\nLAW\n${law}\n\nRULES (decided by code)\n${ruleText}${feedback ? `\n\nREVIEWER FEEDBACK ON YOUR LAST DRAFT - fix these:\n${feedback}` : ""}`,
     temperature: 0.3,
@@ -161,14 +169,71 @@ The plainSummary must be written in ${LANG[intake.language]}.`,
 const MARKER = /\[\[([A-Z]+-\d+[A-Z]{0,2})\]\]/g;
 const LOOSE_SECTION = /\b(?:section|sec\.?|s\.)\s*\d+[A-Z]?/gi;
 
+/** Turns a bare "Section 173" into [[BNSS-173]] when exactly one researched section has that number. */
+export function repairCitations(draft: Draft, selected: Selected[]): Draft {
+  const fix = (s: string) =>
+    s.replace(/\b(?:section|sec\.?|s\.)\s*(\d+[A-Z]?)(?:\(\d+\))*(?:\s+of\s+the\s+[A-Z][\w ,]*?\d{4})?/gi, (m, num: string) => {
+      const hits = selected.filter((x) => x.section.section.toUpperCase() === num.toUpperCase());
+      return hits.length === 1 ? `[[${hits[0].section.id}]]` : m;
+    });
+  return { ...draft, body: fix(draft.body) };
+}
+
 export type Check = { id: string; claim: string; supported: boolean; note: string };
-export type Verification = { ok: boolean; codeIssues: string[]; checks: Check[] };
+export type FactIssue = { statement: string; problem: string };
+export type Verification = { ok: boolean; codeIssues: string[]; checks: Check[]; factIssues: FactIssue[] };
 
 const SupportSchema = z.object({
   checks: z.array(z.object({ id: z.string(), claim: z.string().describe("the sentence in the draft that cites this section"), supported: z.boolean(), note: z.string().describe("why, in one sentence") })),
 });
+const FactSchema = z.object({
+  issues: z
+    .array(
+      z.object({
+        statement: z.string().describe("the statement in the draft, quoted"),
+        inventedText: z.string().describe("the exact words in the draft that assert the invented fact, copied verbatim; never include […]"),
+        problem: z.string().describe("what in it is not in the user's story"),
+      }),
+    )
+    .describe("statements of fact about what happened or what the user did that the STORY does not say"),
+});
 
-export async function verifierAgent(draft: Draft, selected: Selected[], onUsage: (u: Usage) => void): Promise<Verification> {
+// Placeholders are the user's to fill, so the fact checker never sees them: each becomes "[…]".
+// (Nested brackets, as in optional lines "[If ...: [number]]", are removed from the inside out.)
+const hidePlaceholders = (s: string) => {
+  let prev;
+  do {
+    prev = s;
+    s = s.replace(/\[(?!\[)[^[\]]*\](?!\])/g, "[…]");
+  } while (s !== prev);
+  return s;
+};
+
+async function factCheck(story: string, draft: Draft, onUsage: (u: Usage) => void): Promise<FactIssue[]> {
+  const body = hidePlaceholders(draft.body.replace(MARKER, "(law)"));
+  const r = await generateJson(FactSchema, {
+    agent: "verifier.facts",
+    system: `You check a legal draft for invented facts. Compare every statement of fact in the DRAFT (events, dates, amounts, people, and actions the user took) with the user's STORY. Report a statement only if it asserts something the STORY does not say. "[…]" marks a blank the user will fill in: it is never a fact. Legal arguments, requests to the authority, and any list of documents to attach are not facts either; never report them.`,
+    // relative dates in the story ("today", "last night") are resolved against this date
+    prompt: `Today is ${new Date().toISOString().slice(0, 10)}.\n\nSTORY\n"""${story}"""\n\nDRAFT\n${body}`,
+    temperature: 0,
+    onUsage,
+  });
+  // Keep an issue only if the quoted words are really in the draft and are more than the label of a blank
+  // ("Registration Number […]", "vide […]"): those are requests for the user to fill in, not invented facts.
+  const squash = (s: string) => s.replace(/\s+/g, " ").trim().toLowerCase();
+  const text = squash(body);
+  return r.issues
+    .filter((i) => {
+      const w = squash(i.inventedText).replace(/[.,;:]+$/, "");
+      if (!w || w.includes("[…]") || !text.includes(w)) return false;
+      const after = text.slice(text.indexOf(w) + w.length).replace(/^[\s:,\-–]*/, "");
+      return !after.startsWith("[…]");
+    })
+    .map(({ statement, problem }) => ({ statement, problem }));
+}
+
+export async function verifierAgent(story: string, draft: Draft, selected: Selected[], onUsage: (u: Usage) => void): Promise<Verification> {
   const allowed = new Set(selected.map((s) => s.section.id));
   const cited = [...new Set([...draft.body.matchAll(MARKER)].map((m) => m[1]))];
   const codeIssues: string[] = [];
@@ -181,19 +246,21 @@ export async function verifierAgent(draft: Draft, selected: Selected[], onUsage:
   if (cited.length === 0) codeIssues.push("The draft cites no law; ground it in the researched sections.");
 
   const valid = cited.filter((id) => allowed.has(id));
-  let checks: Check[] = [];
-  if (valid.length) {
+  const citationCheck = async (): Promise<Check[]> => {
+    if (!valid.length) return [];
     const law = valid.map((id) => `[[${id}]] ${citeLabel(id)}\n${getSection(id)!.text.slice(0, 2500)}`).join("\n\n");
     const r = await generateJson(SupportSchema, {
-      agent: "verifier",
+      agent: "verifier.citations",
       system: `You verify legal citations. For every [[ID]] marker in the DRAFT, find the sentence that cites it and decide whether the cited section's TEXT actually supports that sentence. Be strict: supported only if the section text says it. One entry per marker.`,
       prompt: `DRAFT\n${draft.body}\n\nSECTION TEXTS\n${law}`,
       temperature: 0,
       onUsage,
     });
-    checks = r.checks.filter((c) => valid.includes(c.id));
-  }
-  return { ok: codeIssues.length === 0 && checks.every((c) => c.supported), codeIssues, checks };
+    return r.checks.filter((c) => valid.includes(c.id));
+  };
+  // the two model checks are independent: run them together
+  const [checks, factIssues] = await Promise.all([citationCheck(), factCheck(story, draft, onUsage)]);
+  return { ok: codeIssues.length === 0 && checks.every((c) => c.supported) && factIssues.length === 0, codeIssues, checks, factIssues };
 }
 
 // ---------------- orchestration ----------------
@@ -240,25 +307,41 @@ export async function runPipeline(story: string, emit: (e: TraceEvent) => void, 
   }
 
   const rules = rulesFor(issue, intake.facts);
+  // the procedure for each issue type is fixed by statute: the sections the rules rely on are always cited,
+  // whatever the research agent found for the substance
+  const have = new Set(selected.map((s) => s.section.id));
+  for (const r of rules) {
+    for (const b of r.basis) {
+      if (b.section && !have.has(b.section)) {
+        have.add(b.section);
+        selected.push({ section: getSection(b.section)!, why: `Procedure: ${r.label.toLowerCase()} - ${r.value}` });
+      }
+    }
+  }
   emit({ type: "step", agent: "rules", status: "done", detail: rules.map((r) => r.label).join(" · ") });
 
   emit({ type: "step", agent: "drafter", status: "start", detail: `Drafting: ${DOC_TITLES[issue]}` });
-  let draft = await drafterAgent(intake, selected, rules, onUsage);
+  let draft = repairCitations(await drafterAgent(intake, selected, rules, onUsage), selected);
   emit({ type: "step", agent: "drafter", status: "done" });
 
-  emit({ type: "step", agent: "verifier", status: "start", detail: "Checking every citation against the statute text" });
-  let verification = await verifierAgent(draft, selected, onUsage);
+  emit({ type: "step", agent: "verifier", status: "start", detail: "Checking every citation against the statute text and every fact against your story" });
+  let verification = await verifierAgent(fullStory, draft, selected, onUsage);
   let revised = false;
   if (!verification.ok) {
-    const feedback = [...verification.codeIssues, ...verification.checks.filter((c) => !c.supported).map((c) => `[[${c.id}]] does not support: "${c.claim}" (${c.note})`)].join("\n");
-    emit({ type: "step", agent: "verifier", status: "done", detail: `Found ${feedback.split("\n").length} problem(s); sending the draft back` });
+    const feedback = [
+      ...verification.codeIssues,
+      ...verification.checks.filter((c) => !c.supported).map((c) => `[[${c.id}]] does not support: "${c.claim}" (${c.note})`),
+      ...verification.factIssues.map((f) => `Invented fact, remove it or make it a [placeholder]: "${f.statement}" (${f.problem})`),
+    ];
+    emit({ type: "step", agent: "verifier", status: "done", detail: `Found ${feedback.length} problem(s); sending the draft back` });
     emit({ type: "step", agent: "drafter", status: "start", detail: "Revising the draft" });
-    draft = await drafterAgent(intake, selected, rules, onUsage, feedback);
-    verification = await verifierAgent(draft, selected, onUsage);
+    draft = repairCitations(await drafterAgent(intake, selected, rules, onUsage, feedback.join("\n")), selected);
+    verification = await verifierAgent(fullStory, draft, selected, onUsage);
     revised = true;
   }
   const n = verification.checks.length;
-  emit({ type: "step", agent: "verifier", status: "done", detail: `${verification.checks.filter((c) => c.supported).length}/${n} citations supported by the statute text${verification.codeIssues.length ? `; ${verification.codeIssues.length} issue(s) left` : ""}` });
+  const left = verification.codeIssues.length + verification.factIssues.length;
+  emit({ type: "step", agent: "verifier", status: "done", detail: `${verification.checks.filter((c) => c.supported).length}/${n} citations supported; ${verification.factIssues.length ? `${verification.factIssues.length} unsupported fact(s)` : "no invented facts"}${left ? "; needs your review" : ""}` });
 
   emit({
     type: "result",

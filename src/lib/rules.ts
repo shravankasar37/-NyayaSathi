@@ -70,6 +70,12 @@ export function consumerRules(f: { incidentDate?: string | null; amount?: number
 export function rtiRules(f: { applicationDate?: string | null; lifeOrLiberty?: boolean }): RuleResult[] {
   const out: RuleResult[] = [];
   out.push({
+    key: "apply",
+    label: "How to apply",
+    value: "Send a written or electronic application to the Public Information Officer of the office that holds the information. You do not have to give any reason for asking.",
+    basis: [{ section: "RTI-6" }],
+  });
+  out.push({
     key: "fee",
     label: "Fee",
     value: "₹10 for central public authorities (State governments set their own fee). No fee for applicants below the poverty line, with proof.",

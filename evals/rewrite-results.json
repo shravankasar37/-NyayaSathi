@@ -1,0 +1,416 @@
+{
+ "n": 40,
+ "at": "2026-10-17T14:40:21.140Z",
+ "stats": {
+  "base": {
+   "r1": 17,
+   "r3": 26,
+   "r5": 30,
+   "r10": 33,
+   "mrr": 22.38452380952381
+  },
+  "agentic": {
+   "r1": 18,
+   "r3": 33,
+   "r5": 36,
+   "r10": 39,
+   "mrr": 26.083333333333332
+  }
+ },
+ "rows": [
+  {
+   "q": "The shop sold me a defective phone and refuses to replace it. Where can I file a complaint?",
+   "queries": [
+    "deficiency in service",
+    "unfair trade practice",
+    "complaint to district commission"
+   ],
+   "baseRank": 1,
+   "agenticRank": 2
+  },
+  {
+   "q": "How many years do I have to file a consumer case after the problem happened?",
+   "queries": [
+    "limitation period for filing complaint",
+    "deficiency in service"
+   ],
+   "baseRank": 2,
+   "agenticRank": 1
+  },
+  {
+   "q": "Which consumer commission handles my complaint, what is the value limit of the district commission?",
+   "queries": [
+    "jurisdiction of district commission",
+    "pecuniary jurisdiction of the district commission",
+    "complaint to district consumer dispute redressal commission"
+   ],
+   "baseRank": 1,
+   "agenticRank": 1
+  },
+  {
+   "q": "I want to appeal against the order of the District Commission",
+   "queries": [
+    "appeal against order of District Commission",
+    "Consumer Protection Act appeal to State Commission"
+   ],
+   "baseRank": 2,
+   "agenticRank": 2
+  },
+  {
+   "q": "A company showed a false and misleading advertisement about its product",
+   "queries": [
+    "misleading advertisement",
+    "false or misleading advertisement",
+    "unfair trade practice",
+    "complaint to district commission"
+   ],
+   "baseRank": 2,
+   "agenticRank": 6
+  },
+  {
+   "q": "A pressure cooker exploded because of a manufacturing defect, can I claim compensation from the manufacturer?",
+   "queries": [
+    "product liability action against manufacturer",
+    "deficiency in service",
+    "compensation for harm caused by product defect"
+   ],
+   "baseRank": 2,
+   "agenticRank": 3
+  },
+  {
+   "q": "What counts as an unfair trade practice?",
+   "queries": [
+    "unfair trade practice",
+    "complaint to district commission"
+   ],
+   "baseRank": 1,
+   "agenticRank": 2
+  },
+  {
+   "q": "Can my consumer dispute be settled through mediation?",
+   "queries": [
+    "mediation",
+    "referral to mediation",
+    "settlement through mediation"
+   ],
+   "baseRank": 1,
+   "agenticRank": 1
+  },
+  {
+   "q": "Can I file a consumer complaint online electronically?",
+   "queries": [
+    "deficiency in service",
+    "manner in which complaint shall be made",
+    "complaint to consumer commission electronically"
+   ],
+   "baseRank": 1,
+   "agenticRank": 1
+  },
+  {
+   "q": "How do I apply for information from a government office under RTI and what is the fee?",
+   "queries": [
+    "request for obtaining information",
+    "fee for making request",
+    "disposal of request"
+   ],
+   "baseRank": 7,
+   "agenticRank": 2
+  },
+  {
+   "q": "The public information officer has not replied to my RTI application for 30 days",
+   "queries": [
+    "failure to furnish information within time limit",
+    "second appeal",
+    "penalty"
+   ],
+   "baseRank": 1,
+   "agenticRank": 1
+  },
+  {
+   "q": "How do I file the first appeal under RTI?",
+   "queries": [
+    "first appeal",
+    "prefer appeal to first appellate authority"
+   ],
+   "baseRank": 8,
+   "agenticRank": 5
+  },
+  {
+   "q": "What information is exempt from disclosure under RTI, like personal information?",
+   "queries": [
+    "exemption from disclosure of information",
+    "grounds for rejection to information",
+    "personal information exemption"
+   ],
+   "baseRank": 1,
+   "agenticRank": 1
+  },
+  {
+   "q": "Can a penalty be imposed on the PIO for not giving information?",
+   "queries": [
+    "penalties under Right to Information Act",
+    "failure to supply information by public information officer"
+   ],
+   "baseRank": 1,
+   "agenticRank": 1
+  },
+  {
+   "q": "My information concerns life and liberty of a person, how fast must they reply?",
+   "queries": [
+    "information concerning life and liberty time limit",
+    "disposal of request within forty eight hours",
+    "obligation of central public information officer"
+   ],
+   "baseRank": 1,
+   "agenticRank": 1
+  },
+  {
+   "q": "Someone took money from me by lying and never delivered the goods. Which offence is this?",
+   "queries": [
+    "cheating and dishonestly inducing delivery of property",
+    "criminal breach of trust",
+    "information to police and their powers to investigate"
+   ],
+   "baseRank": 4,
+   "agenticRank": 1
+  },
+  {
+   "q": "My bike was stolen from outside my house",
+   "queries": [
+    "theft",
+    "information in cognizable cases",
+    "cognizable offence"
+   ],
+   "baseRank": 5,
+   "agenticRank": 5
+  },
+  {
+   "q": "A man on a motorcycle snatched my gold chain",
+   "queries": [
+    "snatching",
+    "theft",
+    "information in cognizable cases"
+   ],
+   "baseRank": 0,
+   "agenticRank": 2
+  },
+  {
+   "q": "Someone is threatening to harm me and my family unless I do what they say",
+   "queries": [
+    "criminal intimidation",
+    "information in cognizable cases"
+   ],
+   "baseRank": 2,
+   "agenticRank": 1
+  },
+  {
+   "q": "My neighbour is spreading false statements to damage my reputation",
+   "queries": [
+    "defamation",
+    "imputation concerning a deceased person",
+    "information to police and their powers to investigate"
+   ],
+   "baseRank": 4,
+   "agenticRank": 1
+  },
+  {
+   "q": "A man keeps following me and messaging me even though I said no",
+   "queries": [
+    "stalking",
+    "information technology act electronic harassment",
+    "first information report",
+    "cognizable offence procedure"
+   ],
+   "baseRank": 3,
+   "agenticRank": 1
+  },
+  {
+   "q": "My husband and in-laws harass me for dowry and treat me cruelly",
+   "queries": [
+    "husband or relative of husband of a woman subjecting her to cruelty",
+    "taking or abetting dowry",
+    "information relating to commission of a cognizable offence"
+   ],
+   "baseRank": 1,
+   "agenticRank": 1
+  },
+  {
+   "q": "My employer kept my security deposit entrusted to him and used it dishonestly",
+   "queries": [
+    "criminal breach of trust",
+    "police report on information"
+   ],
+   "baseRank": 1,
+   "agenticRank": 1
+  },
+  {
+   "q": "Someone is demanding money by threatening to release my photos",
+   "queries": [
+    "extortion",
+    "criminal intimidation",
+    "information technology act publishing or transmitting obscene material in electronic form",
+    "information technology act punishment for violation of privacy"
+   ],
+   "baseRank": 2,
+   "agenticRank": 2
+  },
+  {
+   "q": "A person slapped and beat me causing injury",
+   "queries": [
+    "voluntarily causing hurt",
+    "assault",
+    "information in cognizable cases"
+   ],
+   "baseRank": 4,
+   "agenticRank": 2
+  },
+  {
+   "q": "Someone deliberately damaged my car",
+   "queries": [
+    "mischief",
+    "information in cognizable cases"
+   ],
+   "baseRank": 0,
+   "agenticRank": 2
+  },
+  {
+   "q": "The police station is refusing to register my FIR",
+   "queries": [
+    "information in cognizable cases",
+    "police station refusal to register first information report",
+    "magistrate order for investigation"
+   ],
+   "baseRank": 3,
+   "agenticRank": 2
+  },
+  {
+   "q": "Can I file an FIR at any police station even if the crime happened in another area?",
+   "queries": [
+    "Information in cognizable cases",
+    "Zero FIR jurisdiction police station"
+   ],
+   "baseRank": 0,
+   "agenticRank": 10
+  },
+  {
+   "q": "Can a magistrate order the police to investigate my complaint?",
+   "queries": [
+    "order for investigation by magistrate",
+    "police investigation on complaint",
+    "information to police officers and their powers to investigate"
+   ],
+   "baseRank": 1,
+   "agenticRank": 1
+  },
+  {
+   "q": "How do I apply for anticipatory bail if I fear arrest?",
+   "queries": [
+    "direction for grant of bail to person apprehending arrest",
+    "information in cognizable cases"
+   ],
+   "baseRank": 3,
+   "agenticRank": 3
+  },
+  {
+   "q": "Do the police have to tell me the grounds of my arrest?",
+   "queries": [
+    "grounds of arrest to be informed",
+    "arrest how made",
+    "person arrested to be informed of grounds of arrest and of right to bail"
+   ],
+   "baseRank": 1,
+   "agenticRank": 2
+  },
+  {
+   "q": "Someone logged into my bank account using my password and OTP",
+   "queries": [
+    "punishment for identity theft",
+    "punishment for cheating by personation using computer resource",
+    "information to police and their powers to investigate",
+    "cognizance of offences"
+   ],
+   "baseRank": 1,
+   "agenticRank": 1
+  },
+  {
+   "q": "A fraudster pretended to be a bank officer on a phone call and took my money",
+   "queries": [
+    "cheating by personation",
+    "punishment for cheating",
+    "information technology fraud",
+    "information relating to commission of a cognizable offence"
+   ],
+   "baseRank": 0,
+   "agenticRank": 2
+  },
+  {
+   "q": "Someone posted my private photos online without my consent",
+   "queries": [
+    "voyeurism",
+    "publishing or transmitting sexually explicit material in electronic form",
+    "information to police and their powers to investigate"
+   ],
+   "baseRank": 1,
+   "agenticRank": 3
+  },
+  {
+   "q": "A company leaked my personal data because of poor security",
+   "queries": [
+    "punishment for failure to protect reasonable security practices causing wrongful loss",
+    "procedure for information technology security breach compensation",
+    "cognizance of offences relating to data privacy breach"
+   ],
+   "baseRank": 1,
+   "agenticRank": 1
+  },
+  {
+   "q": "My computer was hacked and files were damaged",
+   "queries": [
+    "damage to computer system, computer resource",
+    "hacking",
+    "information technology offences procedure"
+   ],
+   "baseRank": 0,
+   "agenticRank": 0
+  },
+  {
+   "q": "दुकानदार ने खराब फोन बेचा और बदलने से मना कर दिया, शिकायत कहाँ करूं?",
+   "queries": [
+    "deficiency in service",
+    "unfair trade practice",
+    "complaint to District Commission"
+   ],
+   "baseRank": 0,
+   "agenticRank": 6
+  },
+  {
+   "q": "किसी ने मुझसे झूठ बोलकर पैसे ठग लिए",
+   "queries": [
+    "cheating",
+    "cheating by personation",
+    "information relating to the commission of a cognizable offence"
+   ],
+   "baseRank": 6,
+   "agenticRank": 1
+  },
+  {
+   "q": "पोलीस माझी एफआयआर नोंदवून घेत नाहीत",
+   "queries": [
+    "information in cognizable cases",
+    "police officer to investigate cognizable case"
+   ],
+   "baseRank": 0,
+   "agenticRank": 4
+  },
+  {
+   "q": "माहितीचा अधिकार अर्ज कसा करायचा?",
+   "queries": [
+    "request for obtaining information",
+    "disposal of request",
+    "appeal"
+   ],
+   "baseRank": 1,
+   "agenticRank": 2
+  }
+ ]
+}
