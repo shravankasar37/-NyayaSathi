@@ -1,0 +1,6 @@
+{
+ "model": "Xenova/multilingual-e5-small",
+ "dim": 384,
+ "count": 1557,
+ "corpusHash": "5bc8138fec3b48be"
+}

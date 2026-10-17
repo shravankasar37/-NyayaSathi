@@ -1,0 +1,67 @@
+{
+ "n": 40,
+ "at": "2026-10-17T13:47:51.136Z",
+ "results": {
+  "bm25": {
+   "r1": 0.275,
+   "r3": 0.475,
+   "r5": 0.5,
+   "r10": 0.575,
+   "mrr": 0.3808630952380952,
+   "misses": [
+    "How do I apply for information from a government office unde -> got RTI-15,BNS-189,RTI-7",
+    "How do I file the first appeal under RTI? -> got CPA-24,IT-62,BNSS-425",
+    "Someone took money from me by lying and never delivered the  -> got CPA-35,BNSS-499,BNSS-244",
+    "My bike was stolen from outside my house -> got BNSS-129,BNS-317,BNSS-201",
+    "A man on a motorcycle snatched my gold chain -> got BNS-75,BNS-356,BNS-78",
+    "Someone is threatening to harm me and my family unless I do  -> got BNSS-244,BNS-356,BNS-29",
+    "A man keeps following me and messaging me even though I said -> got BNS-75,BNS-63,BNS-356",
+    "Someone is demanding money by threatening to release my phot -> got BNSS-31,BNSS-244,BNS-330",
+    "A person slapped and beat me causing injury -> got BNS-101,BNS-330,CPA-90",
+    "Someone deliberately damaged my car -> got BNSS-244,BNS-294,CPA-2",
+    "Can I file an FIR at any police station even if the crime ha -> got BNSS-186,BNSS-30,IT-5",
+    "A fraudster pretended to be a bank officer on a phone call a -> got BNS-316,BNS-178,BNS-180",
+    "My computer was hacked and files were damaged -> got IT-42,IT-2,IT-65",
+    "दुकानदार ने खराब फोन बेचा और बदलने से मना कर दिया, शिकायत कह -> got ",
+    "किसी ने मुझसे झूठ बोलकर पैसे ठग लिए -> got ",
+    "पोलीस माझी एफआयआर नोंदवून घेत नाहीत -> got ",
+    "माहितीचा अधिकार अर्ज कसा करायचा? -> got "
+   ]
+  },
+  "dense": {
+   "r1": 0.45,
+   "r3": 0.575,
+   "r5": 0.675,
+   "r10": 0.75,
+   "mrr": 0.5446130952380953,
+   "misses": [
+    "Someone took money from me by lying and never delivered the  -> got BNSS-499,BNS-22,BNS-179",
+    "A man on a motorcycle snatched my gold chain -> got BNS-314,BNS-303,BNS-180",
+    "Someone deliberately damaged my car -> got BNS-346,BNS-298,BNS-354",
+    "The police station is refusing to register my FIR -> got BNSS-176,BNSS-35,RTI-7",
+    "Can I file an FIR at any police station even if the crime ha -> got BNSS-186,BNSS-198,BNSS-40",
+    "How do I apply for anticipatory bail if I fear arrest? -> got BNSS-488,BNSS-481,BNSS-489",
+    "A fraudster pretended to be a bank officer on a phone call a -> got BNS-344,BNS-316,BNS-228",
+    "My computer was hacked and files were damaged -> got IT-42,IT-65,IT-66A",
+    "दुकानदार ने खराब फोन बेचा और बदलने से मना कर दिया, शिकायत कह -> got CPA-17,CPA-16,CPA-89",
+    "पोलीस माझी एफआयआर नोंदवून घेत नाहीत -> got BNSS-195,BNSS-35,BNSS-174"
+   ]
+  },
+  "hybrid": {
+   "r1": 0.425,
+   "r3": 0.65,
+   "r5": 0.75,
+   "r10": 0.825,
+   "mrr": 0.5596130952380952,
+   "misses": [
+    "A man on a motorcycle snatched my gold chain -> got BNS-101,BNS-75,BNS-356",
+    "Someone deliberately damaged my car -> got IT-42,BNSS-244,BNS-294",
+    "Can I file an FIR at any police station even if the crime ha -> got BNSS-186,BNSS-175,BNSS-188",
+    "A fraudster pretended to be a bank officer on a phone call a -> got BNS-316,BNS-178,BNSS-490",
+    "My computer was hacked and files were damaged -> got IT-42,IT-65,IT-66D",
+    "दुकानदार ने खराब फोन बेचा और बदलने से मना कर दिया, शिकायत कह -> got CPA-17,CPA-16,CPA-89",
+    "पोलीस माझी एफआयआर नोंदवून घेत नाहीत -> got BNSS-195,BNSS-35,BNSS-174"
+   ]
+  }
+ }
+}
