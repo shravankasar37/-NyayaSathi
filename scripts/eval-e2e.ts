@@ -7,6 +7,9 @@ import { runPipeline, type Result, type TraceEvent } from "../src/lib/agents";
 
 type Case = { story: string; issue: string; mustCite: string[] };
 const cases: Case[] = JSON.parse(readFileSync("evals/e2e.json", "utf8"));
+// free tiers meter tokens per minute; a pause between cases gives each run a fresh budget
+const PAUSE_MS = Number(process.env.EVAL_PAUSE_MS ?? 60_000);
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 type Row = {
   story: string; expected: string; got: string; outcome: string; issueOk: boolean; mustCiteOk: boolean;
@@ -15,6 +18,7 @@ type Row = {
 };
 const rows: Row[] = [];
 for (const [n, c] of cases.entries()) {
+  if (n > 0) await sleep(PAUSE_MS);
   const t0 = Date.now();
   let result: Result | null = null;
   let outcome = "error";

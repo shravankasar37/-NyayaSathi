@@ -10,7 +10,7 @@ type Route = { provider: Provider; model: string };
 
 function buildRoutes(): Route[] {
   const groq: Route[] = process.env.GROQ_API_KEY
-    ? [...new Set([process.env.GROQ_MODEL, "openai/gpt-oss-120b", "llama-3.3-70b-versatile"].filter(Boolean) as string[])].map((model) => ({ provider: "groq" as const, model }))
+    ? [...new Set([process.env.GROQ_MODEL, "openai/gpt-oss-120b", "qwen/qwen3.8-27b", "openai/gpt-oss-20b"].filter(Boolean) as string[])].map((model) => ({ provider: "groq" as const, model }))
     : [];
   const gemini: Route[] = process.env.GEMINI_API_KEY
     ? [...new Set([process.env.GEMINI_MODEL, "gemini-3.5-flash", "gemini-2.5-flash", "gemini-3.5-flash-lite"].filter(Boolean) as string[])].map((model) => ({ provider: "gemini" as const, model }))
@@ -26,9 +26,17 @@ type Reply = { text: string; inputTokens: number; outputTokens: number };
 
 /** An HTTP failure from any provider, so failover logic does not depend on one SDK's error class. */
 export class LlmError extends Error {
-  constructor(message: string, readonly status: number) {
+  constructor(message: string, readonly status: number, readonly retryAfterMs?: number) {
     super(message);
   }
+}
+
+/** Groq says "Please try again in 17.69s" (or a Retry-After header) when a per-minute budget is spent. */
+function retryAfter(res: Response, body: string): number | undefined {
+  const h = Number(res.headers.get("retry-after"));
+  if (h > 0) return h * 1000;
+  const m = /try again in (?:(\d+)m)?(\d+(?:\.\d+)?)s/.exec(body);
+  return m ? (Number(m[1] ?? 0) * 60 + Number(m[2])) * 1000 : undefined;
 }
 const statusOf = (e: unknown) => (e instanceof LlmError ? e.status : e instanceof ApiError ? e.status : 0);
 const transient = (e: unknown) => statusOf(e) === 429 || statusOf(e) >= 500;
@@ -56,7 +64,10 @@ async function groqCall(model: string, opts: CallOpts, jsonSchema?: unknown): Pr
       ...(model.startsWith("openai/gpt-oss") ? { reasoning_effort: "medium" } : {}),
     }),
   });
-  if (!res.ok) throw new LlmError(`groq ${model} ${res.status}: ${(await res.text()).slice(0, 300)}`, res.status);
+  if (!res.ok) {
+    const body = await res.text();
+    throw new LlmError(`groq ${model} ${res.status}: ${body.slice(0, 300)}`, res.status, retryAfter(res, body));
+  }
   const j = (await res.json()) as { choices?: { message?: { content?: string } }[]; usage?: { prompt_tokens?: number; completion_tokens?: number } };
   return { text: j.choices?.[0]?.message?.content ?? "", inputTokens: j.usage?.prompt_tokens ?? 0, outputTokens: j.usage?.completion_tokens ?? 0 };
 }
@@ -82,21 +93,30 @@ async function call(opts: CallOpts, jsonSchema?: unknown): Promise<string> {
   if (!ROUTES.length) throw new Error("No LLM provider configured: set GROQ_API_KEY and/or GEMINI_API_KEY (see .env.example)");
   const t0 = Date.now();
   let last: unknown;
-  for (const route of ROUTES) {
-    for (let attempt = 0; attempt < 2; attempt++) {
-      try {
-        const r = route.provider === "groq" ? await groqCall(route.model, opts, jsonSchema) : await geminiCall(route.model, opts, jsonSchema);
-        if (!r.text) throw new LlmError(`${opts.agent}: empty response from ${route.provider}/${route.model}`, 502);
-        opts.onUsage?.({ agent: opts.agent, model: `${route.provider}/${route.model}`, ms: Date.now() - t0, inputTokens: r.inputTokens, outputTokens: r.outputTokens });
-        return r.text;
-      } catch (e) {
-        if (!transient(e)) throw e;
-        last = e;
-        // a 429 means this route's quota is spent: move on rather than wait
-        if (attempt === 0 && statusOf(e) !== 429) await sleep(1_500);
-        else break;
+  // Free tiers meter tokens per minute: when every route is spent, wait for the soonest reset and go round
+  // again (at most 3 rounds, never waiting more than 30 s at a time), instead of failing the user.
+  for (let round = 0; round < 3; round++) {
+    let soonest = Infinity;
+    for (const route of ROUTES) {
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const r = route.provider === "groq" ? await groqCall(route.model, opts, jsonSchema) : await geminiCall(route.model, opts, jsonSchema);
+          if (!r.text) throw new LlmError(`${opts.agent}: empty response from ${route.provider}/${route.model}`, 502);
+          opts.onUsage?.({ agent: opts.agent, model: `${route.provider}/${route.model}`, ms: Date.now() - t0, inputTokens: r.inputTokens, outputTokens: r.outputTokens });
+          return r.text;
+        } catch (e) {
+          if (!transient(e)) throw e;
+          last = e;
+          if (e instanceof LlmError && e.retryAfterMs) soonest = Math.min(soonest, e.retryAfterMs);
+          // a 429 means this route's budget is spent for now: try the next route rather than wait
+          if (attempt === 0 && statusOf(e) !== 429) await sleep(1_500);
+          else break;
+        }
       }
     }
+    // no route said when it resets (for example a daily quota): waiting would not help
+    if (!Number.isFinite(soonest) || soonest > 30_000) break;
+    await sleep(soonest + 500);
   }
   throw last;
 }
