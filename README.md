@@ -78,7 +78,25 @@ test set ([`scripts/eval-rewrite.ts`](scripts/eval-rewrite.ts)).
 
 ### End-to-end
 
-{{E2E_TABLE}}
+12 scenarios ([`evals/e2e.json`](evals/e2e.json)) run end to end in the **deployed configuration**: Groq
+`gpt-oss-120b` (Qwen 3.8 / `gpt-oss-20b` as failover), BM25 + agent query rewriting for retrieval
+([`evals/e2e-results.json`](evals/e2e-results.json)).
+
+| Metric | Result |
+|---|---|
+| Issue type classified correctly | **12/12** |
+| Out-of-scope matters refused (property, tenancy) | **2/2** |
+| Drafts produced for in-scope matters | 10/10 |
+| Invented or unresearched citations in final drafts | **0** (blocked by code) |
+| Citations whose section text supports the sentence (verifier) | 25/32 (78%) |
+| Required procedural section cited (e.g. CPA s.35, BNSS s.173) | 7/10 |
+| Drafts with statements flagged for the user to check | 5/10 |
+| Drafts revised after verification | 9/10 |
+| Median time per case | 39 s (free-tier rate limits included) |
+
+The six recorded demo runs (Gemini 3.5 Flash-Lite, hybrid retrieval) verified 25/25 citations, so the model and
+retrieval set-up matter: the free Groq configuration is less precise. Remaining unsupported citations are shown to
+the user as "not supported", never hidden. Next steps: dense embeddings in production and a stronger drafting model.
 
 ### Rules engine
 
