@@ -1,0 +1,36 @@
+{
+  "name": "nyayasathi",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "NyayaSathi: agentic RAG legal-aid assistant for Indian citizens",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "ingest": "tsx scripts/ingest.ts",
+    "embed": "tsx scripts/embed.ts",
+    "eval:retrieval": "tsx scripts/eval-retrieval.ts",
+    "eval": "tsx scripts/eval-e2e.ts",
+    "test": "tsx scripts/test-rules.ts"
+  },
+  "dependencies": {
+    "@google/genai": "^1.20.0",
+    "@huggingface/transformers": "^3.7.0",
+    "docx": "^9.5.0",
+    "next": "16.3.6",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "pdf-parse": "^2.4.5",
+    "tailwindcss": "^4",
+    "tsx": "^4.20.0",
+    "typescript": "^5"
+  }
+}
